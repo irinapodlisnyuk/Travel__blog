@@ -1,0 +1,36 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { fileURLToPath } from "url";
+import path from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      scss: {
+        silenceDeprecations: ["import"],
+        additionalData: `@use "@/assets/styles/global/_variables.scss" as *;
+         @use "@/assets/styles/global/_mixins.scss" as *;`,
+      },
+    },
+  },
+  plugins: [react()],
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://travelblog.skillbox.cc",
+        changeOrigin: true,
+        secure: false,
+        // Убедись, что путь передается целиком
+        rewrite: (path) => path,
+      },
+    },
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+});

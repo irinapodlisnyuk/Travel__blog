@@ -1,0 +1,114 @@
+.header {
+  background-image:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%),
+    url("../../../public/images/header-section.png");
+  //min-height: 422px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  color: white;
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    padding-top: 29px;
+    padding-bottom: 142px;
+    gap: 108px;
+
+
+  }
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 30px;
+    align-items: center;
+    border-bottom: 1px solid rgba($white, 0.6);
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 16px;
+
+    &:hover {
+      .header__logo-travel,
+      .header__logo-icon {
+        color: rgba($white, 0.5);
+      }
+    }
+
+    &-icon {
+      width: 41px;
+      height: 30px;
+      color: $white;
+      transition: color $transition-out;
+    }
+
+    &-travel {
+      width: 125px;
+      height: 41px;
+      color: $white;
+      transition: color $transition-out;
+    }
+  }
+
+  &__login {
+    &-open {
+      display: inline-block;
+      font-weight: 400;
+      font-size: 16px;
+      transition: color $transition-out;
+      cursor: pointer;
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -3px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: $white;
+        transition:
+          color $transition-500,
+          width $transition-500,
+          background $transition-500;
+        transform: translateX(-50%);
+      }
+
+      // @include vp-767 {
+      //   &::after {
+      //     display: none;
+      //   }
+      // }
+
+      &:hover,
+      &:focus-visible,
+      &:active {
+        color: rgba($white, 0.5);
+
+        &::after {
+          width: 100%;
+          background: $white;
+        }
+      }
+      &:active {
+        opacity: 0.7;
+      }
+    }
+  }
+
+  &__intro {
+   
+    &-text {
+      font-weight: 700;
+      font-size: 48px;
+      line-height: 72px;
+      text-align: center;
+      margin: 0;
+    }
+  }
+}
