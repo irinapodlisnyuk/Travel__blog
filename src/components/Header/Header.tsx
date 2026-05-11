@@ -1,7 +1,8 @@
 import styles from "./Header.module.scss";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Icon from "../types/Icon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { logoutUser } from "@/api/User";
 
 const AppHeader = () => {
   const navigate = useNavigate();
@@ -13,11 +14,35 @@ const AppHeader = () => {
   const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
   const userName = localStorage.getItem("userName") || "Путешественник";
 
-  const handleLogout = () => {
-    localStorage.clear();
-    setIsAuth(false);
-    navigate("/login");
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const closeMenu = () => setIsMenuOpen(false);
+    document.addEventListener("click", closeMenu);
+
+    return () => document.removeEventListener("click", closeMenu);
+  }, [isMenuOpen]);
+
+  const handleLogout = async () => {
+    try {
+      // 1. Уведомляем бэкенд (опционально, но правильно)
+      await logoutUser();
+    } catch (error) {
+      console.error("Ошибка при выходе на сервере:", error);
+    } finally {
+      // 2. В любом случае чистим локальные данные
+      localStorage.removeItem("token");
+      localStorage.removeItem("userName");
+
+      // 3. Обновляем состояние (если ты используешь стейт для авторизации)
+      setIsAuth(false);
+      setIsMenuOpen(false);
+
+      navigate("/");
+    }
   };
+
+  const headerClass = isHomePage ? styles.header__wrapper : `${styles.header__wrapper} ${styles['header__wrapper--compact']}`;
 
   const introText =
     isHomePage && !isAuth
@@ -27,8 +52,7 @@ const AppHeader = () => {
   return (
     <header className={styles.header}>
       <div className="container">
-        {/* Логотип */}
-        <div className={styles["header__wrapper"]}>
+        <div className={headerClass}>
           <div className={styles["header__top"]}>
             <Link to="/" className={styles["header__logo"]}>
               <Icon

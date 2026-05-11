@@ -16,7 +16,10 @@
     padding-bottom: 142px;
     gap: 108px;
 
-
+    &--compact {
+      gap: 39px;
+      padding-bottom: 40px;
+    }
   }
 
   &__top {
@@ -102,7 +105,6 @@
   }
 
   &__intro {
-   
     &-text {
       font-weight: 700;
       font-size: 48px;

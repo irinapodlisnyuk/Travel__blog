@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './app/layout';
-import Home from './pages/Home/Home';
-// import Login from './pages/Login';
+import Home from './pages/Home/Home'; 
+import {LoginPage} from './pages/Login/LoginPage';
 // import Register from './pages/Register';
 
 function App() {
@@ -12,8 +12,8 @@ function App() {
         <Route path="/" element={<Layout />}>
           {/* index означает, что Home откроется по адресу "/" */}
           <Route index element={<Home />} />
-          {/* <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} /> */}
+          <Route path="login" element={<LoginPage />} />
+          {/* <Route path="register" element={<Register />} />  */}
         </Route>
       </Routes>
     </BrowserRouter>

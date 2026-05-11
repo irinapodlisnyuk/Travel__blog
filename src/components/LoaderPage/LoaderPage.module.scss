@@ -1,5 +1,5 @@
-@use "../../app/scss/global/variables" as *;
-@use "../../app/scss/global/mixins" as *;
+@use "../../assets/styles/global/variables" as *;
+@use "../../assets/styles/global/mixins" as *;
 
 .loader-wrapper {
   box-sizing: border-box;
@@ -16,7 +16,7 @@
 
 .loader-page div {
   position: absolute;
-  border: 4px solid $slate-blue;
+  border: 4px solid $orange;
   opacity: 1;
   border-radius: 50%;
   animation: loader 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;

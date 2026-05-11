@@ -12,17 +12,22 @@ export const PostCard = ({ post }: PostCardProps) => {
 
   return (
     <div className={styles.card}>
-      <div className={styles.card__image}>
-        <img src={fullPhotoUrl} alt={post.title} />
+      <div className={styles.card__post}>
+        <img
+          className={styles["card__post-image"]}
+          src={fullPhotoUrl}
+          alt={post.title}
+        />
       </div>
       <div className={styles.card__content}>
-        <h3 className={styles.card__title}>{post.title}</h3>
+        <h3 className={styles.card__title}>{post.title.toLowerCase()}</h3>
         <p className={styles.card__excerpt}>{post.excerpt}</p>
-        <div className={styles.card__location}>
-          {/* county с опечаткой, как в API Skillbox */}
-          {post.county}, {post.city}
+        <div className={styles.card__intro}>
+          <span className={styles["card__location"]}>
+            {post.county}, {post.city}
+          </span>
+          <Link  className={styles["card__details-btn"]} to={`/posts/${post.id}`}>Подробнее</Link>
         </div>
-        <Link to={`/posts/${post.id}`}>Подробнее</Link>
       </div>
     </div>
   );

@@ -1,0 +1,39 @@
+.home {
+  padding: 60px 0 0;
+  margin: 0 0 60px;
+
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+  }
+
+  &__add-Btn {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 13px;
+    color: $white;
+    background-color: $orange;
+    border-radius: 10px;
+    padding: 19px 30px;
+    cursor: pointer;
+    transition: background-color $transition-500;
+
+    &:hover {
+      background-color: $tangerine;
+    }
+  }
+
+  &__loading {
+    display: flex;
+    position: relative;
+  }
+
+  &__cards {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
