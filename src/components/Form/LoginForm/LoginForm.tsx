@@ -1,15 +1,12 @@
 import { FormField } from "../FormField";
 import { fetchMe, loginUser } from "../../../api/User";
-import styles from "./LoginForm.module.scss";
-import "./Custom-login.scss";
+import styles from "./loginForm.module.scss";
+import customStyles from "./custom-login.module.scss";
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Icon from "@/components/types/Icon";
 
-interface LoginFormProps {
-  onSwitchToRegister: () => void; // Добавляем пропс для переключения
-}
-
-export const LoginForm: FC<LoginFormProps> = ({ onSwitchToRegister }) => {
+export const LoginForm: FC = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -17,6 +14,12 @@ export const LoginForm: FC<LoginFormProps> = ({ onSwitchToRegister }) => {
   // Состояния для интерфейса
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const inputError= error ? customStyles["custom__input--error"] : "";
+
+  const handleGoToRegister = () => {
+    navigate("/register");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,66 +30,67 @@ export const LoginForm: FC<LoginFormProps> = ({ onSwitchToRegister }) => {
       // 1. Вызываем функцию логина
       const { token } = await loginUser(email, password);
 
-      // 2. Сохраняем токен в "память" браузера
+      // 2. Сохраняем токен 
       localStorage.setItem("token", token);
 
       // 3. Сразу запрашиваем данные профиля, чтобы знать имя пользователя
       const userData = await fetchMe();
       if (userData) {
-        localStorage.setItem("userName", userData.name);
+        localStorage.setItem("userName", userData.full_name);
       }
       navigate("/profile");
 
       // Маленький хак: перезагрузим страницу, чтобы Header увидел изменения в localStorage
-      window.location.reload();
-    } catch (err: any) {
-      setError(err.message);
+      //window.location.reload();
+    } catch (error: any) {
+        setError("Неправильный логин или пароль"); 
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form className={styles["login__form"]} onSubmit={handleSubmit}>
-      <div className={styles["login__form-field"]}>
-        <FormField
-          label="Логин"
-          errorMessage={error && error.includes("email") ? error : undefined}
-        >
-          <input
-            className={styles["custom__input"]}
-            type="email"
-            placeholder="Email"
-            onChange={(event) => setEmail(event.target.value)}
-            value={email}
-          />
-        </FormField>
+    <form className={styles.form__login} onSubmit={handleSubmit}>
+      <div className={styles["form__login-wrapper"]}>
+        {error && <p className={styles["form__login-error"]}>{error}</p>}
 
-        <FormField
-          label="Пароль"
-          errorMessage={error && error.includes("пароль") ? error : undefined}
-        >
-          <input
-            className={styles["custom__input"]}
-            type="password"
-            placeholder="Пароль"
-            onChange={(event) => setPassword(event.target.value)}
-            value={password}
-          />
-        </FormField>
+        <div className={styles["form__login-field"]}>
+          <FormField label="Логин" icon={<Icon name="icon-label" />}>
+            <input
+              className={`${customStyles["custom__input"]} ${inputError}`}
+              type="email"
+              placeholder="Email"
+              onChange={(event) => setEmail(event.target.value)}
+              value={email}
+            />
+          </FormField>
+
+          <FormField
+            label="Пароль"
+            icon={<Icon name="icon-label" />}
+          >
+            <input
+              className={`${customStyles["custom__input"]} ${inputError}`}
+              type="password"
+              placeholder="Пароль"
+              onChange={(event) => setPassword(event.target.value)}
+              value={password}
+            />
+          </FormField>
+        </div>
       </div>
-      <div className={styles["login__form-btn"]}>
+      <div className={styles["form__login-btn"]}>
         <button
-          type="button" // ОБЯЗАТЕЛЬНО type="button", чтобы не отправлять форму
-          className={styles["login__secondary-btn"]}
-          onClick={onSwitchToRegister}
+          type="button"
+          className={`${styles["form__login-secondary-btn"]} ${styles.btn}`}
+          onClick={handleGoToRegister}
           disabled={isLoading}
         >
           Зарегистрироваться
         </button>
         <button
           type="submit"
-          className={styles["login__submit-btn"]}
+          className={`${styles["form__login-submit-btn"]} ${styles.btn}`}
           disabled={isLoading}
         >
           Войти

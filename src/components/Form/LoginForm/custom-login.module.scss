@@ -1,0 +1,26 @@
+.custom__input {
+  width: 100%;
+  padding: 5px 12px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: $nero;
+
+  background: $white;
+  border: 1px solid $gainsboro;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+
+  &::placeholder {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: rgba($black, 0.25);
+  }
+
+  &--error {
+    border: 1px solid $radical-red;
+    outline: none; 
+  }
+}

@@ -1,0 +1,17 @@
+@use "./variables" as *; 
+
+.btn {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 13px;
+    color: $white;
+    background-color: $orange;
+    border-radius: 10px;
+    padding: 19px 30px;
+    cursor: pointer;
+    transition: background-color $transition-500;
+
+    &:hover {
+      background-color: rgba($orange, 0.8);
+    }
+}

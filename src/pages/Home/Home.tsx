@@ -25,7 +25,6 @@ const Home = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  console.log("Доступные стили:", styles);
   return (
     <section className={styles.home}>
       <div className="container">
@@ -42,7 +41,7 @@ const Home = () => {
             </div>
           )}
           {isAuth && (
-            <button className={styles["home__add-Btn"]}>
+            <button className={`${styles["home__add-btn"]} ${styles.btn}`}>
               Добавить моё путешествие
             </button>
            )} 

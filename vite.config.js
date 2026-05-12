@@ -12,7 +12,8 @@ export default defineConfig({
       scss: {
         silenceDeprecations: ["import"],
         additionalData: `@use "@/assets/styles/global/_variables.scss" as *;
-         @use "@/assets/styles/global/_mixins.scss" as *;`,
+         @use "@/assets/styles/global/_mixins.scss" as *;
+         @use "@/assets/styles/global/_btn.scss" as *;`,
       },
     },
   },
@@ -20,11 +21,9 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://travelblog.skillbox.cc",
+         target: "https://travelblog.skillbox.cc",
         changeOrigin: true,
         secure: false,
-        // Убедись, что путь передается целиком
-        rewrite: (path) => path,
       },
     },
   },

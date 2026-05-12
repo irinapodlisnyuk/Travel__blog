@@ -1,71 +1,34 @@
+.form-field {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+
+  &__wrapper {
+    display: flex;
+    gap: 4px;
+  }
+
+  &__icon {
+    display: flex;
+    width: 7px;
+    height: 17px;
+  }
+
+  &__label {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: rgba($black, 0.85);
+  }
 
 
-// .form-field {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: stretch;
-//   width: 100%;
+  &__error-text {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: $radical-red;
+  }
 
-//   &__control {
-//     position: relative;
-//   }
-// }
-
-// .form-field__error-text {
-//   color: var(--error);
-//   font-size: 12px;
-// }
-
-// .form-field > input,
-// .form-field > textarea {
-//   border-radius: 8px;
-//   font-size: 16px;
-//   color: var(--text-primary);
-//   border: 1px solid var(--border);
-//   padding: 12px 16px;
-// }
-
-// .form-field:focus-within > input,
-// .form-field:focus-within > textarea {
-//   outline: none;
-//   border-color: var(--primary);
-// }
-
-// .form-field:focus-within > .form-field__label {
-//   color: var(--text-primary);
-// }
-
-// .form-field > input:invalid,
-// .form-field > textarea:invalid {
-//   border-color: var(--error);
-// }
-
-// .form-field.error-message__login {
-//   .custom__login {
-//     border: 1px solid $salmon !important;
-//   }
-
-//   .form-field__control {
-//     svg,
-//     .custom__email-icon,
-//     .custom__key-icon {
-//       color: $salmon !important;
-//     }
-//   }
-// }
-
-// .form-field.error-message__register {
-//   color: $salmon !important;
-//   .custom__register {
-//     border: 1px solid $salmon !important;
-//   }
-
-//   .form-field__control {
-//     svg,
-//     .custom__name-icon,
-//     .custom__email-icon,
-//     .custom__key-icon {
-//       color: $salmon !important;
-//     }
-//   }
-// }
+}

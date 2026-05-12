@@ -1,0 +1,23 @@
+.form__register {
+  width: 100%;
+  max-width: 695px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: flex-start;
+
+  &-field {
+    width: 100%;
+    gap: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    &.hasError {
+      gap: 7px;
+    }
+  }
+}
+.first {
+  display: grid;
+  grid-column: 1/3;
+}

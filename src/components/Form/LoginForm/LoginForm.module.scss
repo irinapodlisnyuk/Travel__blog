@@ -1,17 +1,48 @@
-
-.login-form {
+.form__login {
   width: 100%;
+  max-width: 695px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 24px;
+  gap: 30px;
 
-  &__field {
+  &-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &-field {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
+    gap: 30px;
+  }
+
+  &-btn {
+    display: flex;
+    justify-content: space-between;
+  }
+  &-secondary-btn {
+    background-color: $white;
+    border: 2px solid $orange;
+    color: $orange;
+    transition:
+      color $transition-500,
+      background-color $transition-500;
+
+    &:hover {
+      background-color: rgba($orange, 0.4);
+      color: $white;
+    }
+  }
+
+  &-error {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    text-align: center;
+    color: $radical-red;
   }
 }
-

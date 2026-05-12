@@ -1,0 +1,19 @@
+.home {
+  padding: 60px 0 0;
+  margin: 0 0 60px;
+}
+.home__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 60px;
+}
+.home__loading {
+  display: flex;
+  position: relative;
+}
+.home__cards {
+  display: grid;
+  gap: 30px;
+  grid-template-columns: repeat(3, 1fr);
+}/*# sourceMappingURL=Home.module.css.map */

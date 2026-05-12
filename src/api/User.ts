@@ -1,27 +1,30 @@
 import { z } from "zod";
-import { BASE_URL } from "./config";
 import { validateResponse } from "./validateResponse";
 
-// Схема для токена
-export const UserSchema = z.object({
+export const TokenSchema = z.object({
   token: z.string(),
 });
-export type User = z.infer<typeof UserSchema>;
 
-export const UserInfoSchema = z.object({
+export type TokenResponse = z.infer<typeof TokenSchema>;
+
+export const UserSchema = z.object({
   id: z.number(),
-  name: z.string(),
-  email: z.string(),
-  city: z.string().nullable(), // Город может быть не заполнен
-  bio: z.string().nullable(),
+  full_name: z.string(), // Принимает "" как валидную строку
+  city: z.string().nullable().or(z.string()), // Принимает и null, и ""
+  country: z.string().nullable().or(z.string()),
+  bio: z.string().nullable().or(z.string()),
+  photo: z.string().nullable().or(z.string()), // Добавили поле photo из вашего JSON
+  email: z.string().optional(),
+  token: z.string().optional(),
 });
 
-export type UserInfo = z.infer<typeof UserInfoSchema>;
+export type User = z.infer<typeof UserSchema>;
 
-
-// РЕГИСТРАЦИЯ
-export async function registerUser(email: string, password: string): Promise<User> {
-  const response = await fetch(`${BASE_URL}/api/register`, {
+export async function loginUser(
+  email: string,
+  password: string,
+): Promise<TokenResponse> { 
+  const response = await fetch(`/api/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -29,12 +32,20 @@ export async function registerUser(email: string, password: string): Promise<Use
 
   const validatedRes = await validateResponse(response);
   const data = await validatedRes.json();
-  return UserSchema.parse(data);
+  
+  const result = TokenSchema.parse(data); // Валидируем только токен
+  
+  localStorage.setItem("token", result.token);
+  
+  return result; // Теперь типы совпадают
 }
 
-// ЛОГИН
-export async function loginUser(email: string, password: string): Promise<User> {
-  const response = await fetch(`${BASE_URL}/api/login`, {
+// 2. РЕГИСТРАЦИЯ
+export async function registerUser(
+  email: string,
+  password: string,
+): Promise<TokenResponse> {
+  const response = await fetch(`/api/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -42,44 +53,57 @@ export async function loginUser(email: string, password: string): Promise<User> 
 
   const validatedRes = await validateResponse(response);
   const data = await validatedRes.json();
-  return UserSchema.parse(data);
+  
+  const result = TokenSchema.parse(data);
+  localStorage.setItem("token", result.token); 
+  
+  return result;
 }
+
 
 // ВЫХОД
 export async function logoutUser(): Promise<void> {
   const token = localStorage.getItem("token");
-  const response = await fetch(`${BASE_URL}/api/logout`, {
-    method: "POST",
+
+  try {
+    await fetch(`/api/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    console.error("Ошибка при запросе на логаут:", error);
+  } finally {
+    localStorage.removeItem("token");
+  }
+}
+
+export async function fetchMe(): Promise<User | null> {
+  const token = localStorage.getItem("token");
+
+  if (!token) return null;
+
+  const response = await fetch(`/api/user`, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
 
-  await validateResponse(response);
-}
-
-export async function fetchMe(): Promise<UserInfo | null> {
-  const token = localStorage.getItem("token");
-  
-  if (!token) return null;
-
-  const response = await fetch(`${BASE_URL}/api/user`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
-    },
-  });
-
-  // Если токен протух или неверный, сервер вернет 401
   if (response.status === 401) {
     localStorage.removeItem("token");
     return null;
   }
 
+  if (!response.ok) {
+    throw new Error("Не удалось загрузить данные пользователя");
+  }
+
   const validatedRes = await validateResponse(response);
   const data = await validatedRes.json();
 
-  return UserInfoSchema.parse(data);
+  return UserSchema.parse(data);
 }
