@@ -1,0 +1,60 @@
+.nav {
+  &__wrapper {
+    display: flex;
+    position: relative;
+  }
+
+  &-link {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 10px;
+  }
+
+  &__avatar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    &-img{
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+  }
+
+  &__menu {
+    position: absolute;
+    top: 26px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: $white;
+    padding: 8px;
+    gap: 4px;
+
+    &-btn {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 1.833;
+      color: $nero-black;
+      cursor: pointer;
+      transition:color $transition-500;
+
+      &:hover {
+        color: rgba( $nero-black, 0.6) ;
+      }
+    }
+  }
+
+  &-arrow {
+  display: inline-block; 
+  transition: transform $transition-500; 
+
+  &--rotated {
+    transform: rotate(180deg);
+  }
+}
+
+}

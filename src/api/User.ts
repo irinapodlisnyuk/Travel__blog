@@ -1,24 +1,6 @@
-import { z } from "zod";
 import { validateResponse } from "./validateResponse";
+import { TokenSchema, TokenResponse, UserSchema, User } from "../schemas/userSchema";
 
-export const TokenSchema = z.object({
-  token: z.string(),
-});
-
-export type TokenResponse = z.infer<typeof TokenSchema>;
-
-export const UserSchema = z.object({
-  id: z.number(),
-  full_name: z.string(), // Принимает "" как валидную строку
-  city: z.string().nullable().or(z.string()), // Принимает и null, и ""
-  country: z.string().nullable().or(z.string()),
-  bio: z.string().nullable().or(z.string()),
-  photo: z.string().nullable().or(z.string()), // Добавили поле photo из вашего JSON
-  email: z.string().optional(),
-  token: z.string().optional(),
-});
-
-export type User = z.infer<typeof UserSchema>;
 
 export async function loginUser(
   email: string,
@@ -37,7 +19,7 @@ export async function loginUser(
   
   localStorage.setItem("token", result.token);
   
-  return result; // Теперь типы совпадают
+  return result;
 }
 
 // 2. РЕГИСТРАЦИЯ
@@ -82,7 +64,6 @@ export async function logoutUser(): Promise<void> {
 
 export async function fetchMe(): Promise<User | null> {
   const token = localStorage.getItem("token");
-
   if (!token) return null;
 
   const response = await fetch(`/api/user`, {
@@ -106,4 +87,43 @@ export async function fetchMe(): Promise<User | null> {
   const data = await validatedRes.json();
 
   return UserSchema.parse(data);
+}
+
+
+// ОБНОВЛЕНИЕ ДАННЫХ ПРОФИЛЯ
+export async function updateProfile(formData: FormData): Promise<User> {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`/api/user`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  // Если сервер вернет ошибку (например, 400), validateResponse прервет выполнение
+  const validatedRes = await validateResponse(response);
+  const data = await validatedRes.json();
+
+  // Валидируем обновленные данные через нашу схему
+  return UserSchema.parse(data);
+}
+
+// --- ИЗМЕНЕНИЕ ПАРОЛЯ (PATCH /api/user/password) ---
+export async function updatePassword(newPassword: string): Promise<void> {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`/api/user/password`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      password: newPassword,
+    }),
+  });
+
+  await validateResponse(response);
 }

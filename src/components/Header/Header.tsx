@@ -1,4 +1,5 @@
 import styles from "./Header.module.scss";
+import navStyles from "./Nav.module.scss";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Icon from "../types/Icon";
 import { useEffect, useState } from "react";
@@ -6,43 +7,70 @@ import { logoutUser } from "@/api/User";
 
 const AppHeader = () => {
   const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const location = useLocation();
+
+  // 1. СТРОГО НАВЕРХУ: Сначала объявляем все стейты
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
+  const [userName, setUserName] = useState("Путешественник");
+  const [userPhoto, setUserPhoto] = useState("");
+
   const isHomePage = location.pathname === "/";
 
-  const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
-  const userName = localStorage.getItem("userName") || "Путешественник";
+  // 2. СЛЕДОМ: Описываем все эффекты (useEffect)
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const storedName = localStorage.getItem("userName");
+    const storedPhoto = localStorage.getItem("userPhoto");
+
+    setIsAuth(!!token);
+    setUserName(
+      storedName && storedName !== "undefined" && storedName.trim() !== ""
+        ? storedName
+        : "Путешественник",
+    );
+    setUserPhoto(storedPhoto && storedPhoto !== "undefined" ? storedPhoto : "");
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!isMenuOpen) return;
 
-    const closeMenu = () => setIsMenuOpen(false);
-    document.addEventListener("click", closeMenu);
+    const closeMenu = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      // Безопасная проверка существования класса перед вызовом closest
+      const linkClass = navStyles?.["nav-link"];
+      if (linkClass && target.closest(`.${linkClass}`)) return;
 
+      setIsMenuOpen(false);
+    };
+
+    document.addEventListener("click", closeMenu);
     return () => document.removeEventListener("click", closeMenu);
   }, [isMenuOpen]);
 
+  // 3. СЛЕДОМ: Функции обработчики событий
   const handleLogout = async () => {
     try {
-      // 1. Уведомляем бэкенд (опционально, но правильно)
       await logoutUser();
     } catch (error) {
       console.error("Ошибка при выходе на сервере:", error);
     } finally {
-      // 2. В любом случае чистим локальные данные
       localStorage.removeItem("token");
       localStorage.removeItem("userName");
+      localStorage.removeItem("userPhoto");
 
-      // 3. Обновляем состояние (если ты используешь стейт для авторизации)
       setIsAuth(false);
+      setUserName("Путешественник");
+      setUserPhoto("");
       setIsMenuOpen(false);
 
       navigate("/");
     }
   };
 
-  const headerClass = isHomePage ? styles.header__wrapper : `${styles.header__wrapper} ${styles['header__wrapper--compact']}`;
+  const headerClass = isHomePage
+    ? styles.header__wrapper
+    : `${styles.header__wrapper} ${styles["header__wrapper--compact"]}`;
 
   const introText =
     isHomePage && !isAuth
@@ -62,39 +90,47 @@ const AppHeader = () => {
               <Icon name="travel" className={styles["header__logo-travel"]} />
             </Link>
 
-            <nav className="flex items-center gap-8">
+            <nav className={navStyles.nav}>
               {isAuth ? (
-                /* ВМЕСТО "ВОЙТИ" — ИМЯ С ВЫПАДАЮЩИМ СПИСКОМ */
-                <div className="relative">
+                /* ИМЯ С ВЫПАДАЮЩИМ СПИСКОМ */
+                <div className={navStyles["nav__wrapper"]}>
                   <button
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className="nav-link"
+                    className={navStyles["nav-link"]}
                   >
-                    <span>{userName}</span>
-                    <span
-                      className={`transition-transform ${isMenuOpen ? "rotate-180" : ""}`}
-                    >
+                    <div className={navStyles["nav__avatar"]}>
+                      <img
+                        src={userPhoto || "/images/avatar.jpg"}
+                        alt="Аватар"
+                        className={navStyles["nav__avatar-img"]}
+                      />
+                      <span>{userName}</span>
+                    </div>
+                     <span className={`${navStyles["nav-arrow"]} ${isMenuOpen ? navStyles["nav-arrow--rotated"] : ""}`}>
                       ▼
                     </span>
                   </button>
 
                   {isMenuOpen && (
-                    <div className="absolute ">
+                    <div className={navStyles["nav__menu"]}>
                       <Link
                         to="/profile"
-                        className="block"
+                        className={navStyles["nav__menu-btn"]}
                         onClick={() => setIsMenuOpen(false)}
                       >
                         Профиль
                       </Link>
-                      <button onClick={handleLogout} className="">
+                      <button
+                        onClick={handleLogout}
+                        className={navStyles["nav__menu-btn"]}
+                      >
                         Выйти
                       </button>
                     </div>
                   )}
                 </div>
               ) : (
-                /* ЕСЛИ НЕ АВТОРИЗОВАН */
+                /*  НЕ АВТОРИЗОВАН */
                 <div className={styles["header__login"]}>
                   <Link to="/login" className={styles["header__login-open"]}>
                     Войти

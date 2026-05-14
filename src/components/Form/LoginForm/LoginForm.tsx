@@ -15,7 +15,7 @@ export const LoginForm: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const inputError= error ? customStyles["custom__input--error"] : "";
+  const inputError = error ? customStyles["custom__input--error"] : "";
 
   const handleGoToRegister = () => {
     navigate("/register");
@@ -30,20 +30,21 @@ export const LoginForm: FC = () => {
       // 1. Вызываем функцию логина
       const { token } = await loginUser(email, password);
 
-      // 2. Сохраняем токен 
+      // 2. Сохраняем токен
       localStorage.setItem("token", token);
 
       // 3. Сразу запрашиваем данные профиля, чтобы знать имя пользователя
       const userData = await fetchMe();
       if (userData) {
         localStorage.setItem("userName", userData.full_name);
+        localStorage.setItem("userPhoto", userData.photo || "");
       }
       navigate("/profile");
 
       // Маленький хак: перезагрузим страницу, чтобы Header увидел изменения в localStorage
       //window.location.reload();
     } catch (error: any) {
-        setError("Неправильный логин или пароль"); 
+      setError("Неправильный логин или пароль");
     } finally {
       setIsLoading(false);
     }
@@ -65,10 +66,7 @@ export const LoginForm: FC = () => {
             />
           </FormField>
 
-          <FormField
-            label="Пароль"
-            icon={<Icon name="icon-label" />}
-          >
+          <FormField label="Пароль" icon={<Icon name="icon-label" />}>
             <input
               className={`${customStyles["custom__input"]} ${inputError}`}
               type="password"
