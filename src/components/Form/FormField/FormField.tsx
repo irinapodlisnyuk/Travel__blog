@@ -1,13 +1,7 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 import "./FormField.scss";
+import { IFormFieldProps } from "@/components/types/form";
 
-interface IFormFieldProps {
-  children: ReactNode;
-  errorMessage?: string;
-  className?: string;
-  label?: string;
-  icon?: ReactNode;
-}
 
 export const FormField: FC<IFormFieldProps> = ({
   children,

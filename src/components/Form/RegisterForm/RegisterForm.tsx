@@ -5,12 +5,12 @@ import styles from "./RegisterForm.module.scss";
 import customStyles from "../LoginForm/custom-login.module.scss";
 import Icon from "@/components/types/Icon";
 import { CreateRegisterSchema } from "./RegisterSchema";
+import { useNavigate } from "react-router-dom";
+import { RegisterFormProps } from "@/components/types/form";
 
-interface RegisterFormProps {
-  onSuccess: () => void;
-}
 export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
-  // Состояния для полей
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -43,18 +43,33 @@ export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
     setIsLoading(true);
 
     try {
-      // 2. Запрос к серверу
-      await registerUser(email, password);
-      onSuccess();
+      const response = await registerUser(email, password);
+
+      // Если бэкенд сразу возвращает токен при регистрации, сохраняем его:
+      if (response?.token) {
+        localStorage.setItem("token", response.token);
+      }
+
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      // АВТОМАТИЧЕСКИЙ ПЕРЕХОД: отправляем в профиль и открываем форму редактирования сразу
+      navigate("/profile", { state: { openEdit: true } });
     } catch (err: any) {
+      // Безопасно извлекаем текст ошибки, учитывая возможный ответ от Axios/Fetch структуры
+      const errorText = err.response?.data?.message || err.message || "";
+      const lowerError = errorText.toLowerCase();
+
       if (
-        err.message.toLowerCase().includes("exists") ||
-        err.message.includes("существует") ||
-        err.message.includes("taken")
+        lowerError.includes("exists") ||
+        lowerError.includes("существует") ||
+        lowerError.includes("taken") ||
+        lowerError.includes("token")
       ) {
         setErrors({ email: "Аккаунт с данным email уже существует" });
       } else {
-        setErrors({ server: err.message });
+        setErrors({ server: errorText || "Произошла ошибка при регистрации" });
       }
     } finally {
       setIsLoading(false);
@@ -69,7 +84,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
         noValidate
       >
         <div
-          className={`${styles["form__register-field"]}  ${errors.server ? styles.hasError : ""} ${errors.email ? styles.hasError : ""}`}
+          className={`${styles["form__register-field"]} ${errors.server ? styles.hasError : ""} ${errors.email ? styles.hasError : ""}`}
         >
           <FormField
             label="Email"
@@ -106,7 +121,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
             errorMessage={errors.confirmPassword}
           >
             <input
-              className={`${customStyles["custom__input"]} ${errors.password ? customStyles["custom__input--error"] : ""}`}
+              className={`${customStyles["custom__input"]} ${errors.confirmPassword ? customStyles["custom__input--error"] : ""}`}
               type="password"
               placeholder="Подтвердите пароль"
               value={confirmPassword}

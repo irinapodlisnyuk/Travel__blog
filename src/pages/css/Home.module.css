@@ -15,5 +15,7 @@
 .home__cards {
   display: grid;
   gap: 30px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 370px));
+  justify-content: center;
+  width: 100%;
 }/*# sourceMappingURL=Home.module.css.map */

@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://travelblog.skillbox.cc';
+export const BASE_URL = 'https://travelblog.skillbox.cc';
 
 export const defaultConfig = {
   headers: {

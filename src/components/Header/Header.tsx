@@ -9,7 +9,6 @@ const AppHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 1. СТРОГО НАВЕРХУ: Сначала объявляем все стейты
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
   const [userName, setUserName] = useState("Путешественник");
@@ -17,21 +16,32 @@ const AppHeader = () => {
 
   const isHomePage = location.pathname === "/";
 
-  // 2. СЛЕДОМ: Описываем все эффекты (useEffect)
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedName = localStorage.getItem("userName");
-    const storedPhoto = localStorage.getItem("userPhoto");
+    const updateUserData = () => {
+      const token = localStorage.getItem("token");
+      const storedName = localStorage.getItem("userName");
+      const storedPhoto = localStorage.getItem("userPhoto");
 
-    setIsAuth(!!token);
-    setUserName(
-      storedName && storedName !== "undefined" && storedName.trim() !== ""
-        ? storedName
-        : "Путешественник",
-    );
-    setUserPhoto(storedPhoto && storedPhoto !== "undefined" ? storedPhoto : "");
+      setIsAuth(!!token);
+      setUserName(
+        storedName && storedName !== "undefined" && storedName.trim() !== ""
+          ? storedName
+          : "Путешественник",
+      );
+      setUserPhoto(
+        storedPhoto && storedPhoto !== "undefined" ? storedPhoto : "",
+      );
+    };
+
+    // 1. Считываем данные при монтировании или смене страницы
+    updateUserData();
+
+    // 2. Подписываемся на событие обновления данных для синхронизации на одной странице
+    window.addEventListener("storage", updateUserData);
+
+    // Очищаем слушатель при размонтировании
+    return () => window.removeEventListener("storage", updateUserData);
   }, [location.pathname]);
-
   useEffect(() => {
     if (!isMenuOpen) return;
 
@@ -48,7 +58,6 @@ const AppHeader = () => {
     return () => document.removeEventListener("click", closeMenu);
   }, [isMenuOpen]);
 
-  // 3. СЛЕДОМ: Функции обработчики событий
   const handleLogout = async () => {
     try {
       await logoutUser();
@@ -106,7 +115,9 @@ const AppHeader = () => {
                       />
                       <span>{userName}</span>
                     </div>
-                     <span className={`${navStyles["nav-arrow"]} ${isMenuOpen ? navStyles["nav-arrow--rotated"] : ""}`}>
+                    <span
+                      className={`${navStyles["nav-arrow"]} ${isMenuOpen ? navStyles["nav-arrow--rotated"] : ""}`}
+                    >
                       ▼
                     </span>
                   </button>
@@ -151,3 +162,6 @@ const AppHeader = () => {
 };
 
 export default AppHeader;
+function updateUserData() {
+  throw new Error("Function not implemented.");
+}

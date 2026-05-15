@@ -39,7 +39,7 @@ export const LoginForm: FC = () => {
         localStorage.setItem("userName", userData.full_name);
         localStorage.setItem("userPhoto", userData.photo || "");
       }
-      navigate("/profile");
+       navigate("/profile", { state: { openEdit: false } });
 
       // Маленький хак: перезагрузим страницу, чтобы Header увидел изменения в localStorage
       //window.location.reload();
