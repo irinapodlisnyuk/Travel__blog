@@ -5,6 +5,7 @@ import { getPosts } from "@/api/PostsApi";
 import { PostCard } from "@/components/PostCard/PostCard";
 
 import Loading from "@/loading";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
@@ -41,9 +42,11 @@ const Home = () => {
             </div>
           )}
           {isAuth && (
+            <Link to="/posts" >
             <button className={`${styles["home__add-btn"]} ${styles.btn}`}>
               Добавить моё путешествие
             </button>
+            </Link>
            )} 
         </div>
       </div>

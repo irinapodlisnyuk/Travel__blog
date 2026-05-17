@@ -1,6 +1,5 @@
-// components/Profile/ProfilePhoto.tsx
-import styles from "./ProfileEdit.module.scss";
 import React, { memo } from "react";
+import styles from "./ProfileEdit.module.scss";
 import Icon from "../types/Icon";
 import { FormField } from "../Form/FormField";
 import { ProfilePhotoProps } from "../types/Profile";
@@ -13,8 +12,10 @@ export const ProfilePhoto = memo(
     errorMessage,
     isLoading,
   }: ProfilePhotoProps) => {
-    const handleButtonClick = (e: React.MouseEvent) => {
+    
+    const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
+      // Безопасный вызов клика по скрытому инпуту
       fileInputRef.current?.click();
     };
 
@@ -28,7 +29,7 @@ export const ProfilePhoto = memo(
             <div className={styles["profile__preview-wrapper"]}>
               <img
                 src={photoPreview || "/images/avatar.jpg"}
-                alt="Превью"
+                alt={photoPreview ? "Фото профиля" : "Дефолтный аватар пользователя"}
                 className={styles["profile__preview-img"]}
               />
             </div>

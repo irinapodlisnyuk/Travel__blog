@@ -162,6 +162,3 @@ const AppHeader = () => {
 };
 
 export default AppHeader;
-function updateUserData() {
-  throw new Error("Function not implemented.");
-}

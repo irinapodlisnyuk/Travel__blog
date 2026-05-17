@@ -1,5 +1,5 @@
 import { validateResponse } from "./validateResponse";
-import { TokenSchema, TokenResponse, UserSchema, User } from "../schemas/userSchema";
+import { TokenSchema, TokenResponse, UserSchema, User } from "@/schemas/userSchema";
 import { BASE_URL } from "./config";
 
 const getUrl = (path: string) => `${BASE_URL}${path}`;

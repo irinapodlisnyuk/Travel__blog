@@ -41,7 +41,7 @@ export const LoginForm: FC = () => {
       }
        navigate("/profile", { state: { openEdit: false } });
 
-      // Маленький хак: перезагрузим страницу, чтобы Header увидел изменения в localStorage
+      // перезагрузим страницу, чтобы Header увидел изменения в localStorage
       //window.location.reload();
     } catch (error: any) {
       setError("Неправильный логин или пароль");

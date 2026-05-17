@@ -5,15 +5,27 @@ import { ProfilePhoto } from "./ProfilePhoto";
 import { FormField } from "@/components/Form/FormField/FormField";
 import Icon from "@/components/types/Icon";
 
-import { ProfileLocation } from "../types/Profile"; 
+import { ProfileLocation } from "../types/Profile";
 
 import styles from "./ProfileEdit.module.scss";
 import stylesForm from "./ProfileForm.module.scss";
 import customStyles from "@/components/Form/LoginForm/custom-login.module.scss";
 import { useProfileForm } from "@/hooks/useProfileForm";
+import LoaderPage from "../LoaderPage/LoaderPage";
 
 export const ProfileEdit: FC = () => {
   const { state, actions } = useProfileForm();
+  const { photoPreview, errors, isLoading, isPageLoading, bioLength } = state;
+
+  const {
+    register,
+    handleSubmit,
+    onFormSubmit,
+    handleFileChange,
+    fileInputRef,
+    resetForm,
+    getValues,
+  } = actions;
 
   const location = useLocation();
   const locationState = location.state as ProfileLocation | null;
@@ -23,204 +35,172 @@ export const ProfileEdit: FC = () => {
   );
 
   useEffect(() => {
-    if (location.state?.openEdit) {
-      setIsEditMode(false);
+    if (locationState?.openEdit) {
+      setIsEditMode(true);
     }
-  }, [location]);
-
-  const {
-    fullName,
-    city,
-    bio,
-    photoPreview,
-    newPassword,
-    repeatPassword,
-    errors,
-    isLoading,
-    isPageLoading,
-  } = state;
-  const {
-    setFullName,
-    setCity,
-    setBio,
-    setNewPassword,
-    setRepeatPassword,
-    handleFileChange,
-    handleSubmit,
-    fileInputRef,
-    resetForm,
-  } = actions;
+  }, [locationState?.openEdit]);
 
   if (isPageLoading) {
-    return <div className="container">Загрузка профиля...</div>;
+    return (
+      <div className="container">
+        <LoaderPage />
+      </div>
+    );
   }
 
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const isSuccess = await handleSubmit(e);
-
-    if (isSuccess) {
-      setIsEditMode(false);
-    }
-  };
   const hasAnyError = Object.keys(errors).length > 0;
+
   const getInputClass = (fieldName: string) =>
     `${customStyles["custom__input"]} ${errors[fieldName] ? customStyles["custom__input--error"] : ""}`;
 
+  // РЕЖИМ ПРОСМОТРА
   if (!isEditMode) {
+    const currentValues = getValues?.() || { fullName: "", city: "", bio: "" };
+
     return (
       <ProfileView
-        fullName={fullName}
-        city={city}
-        bio={bio}
+        fullName={currentValues.fullName}
+        city={currentValues.city || ""}
+        bio={currentValues.bio || ""}
         photoPreview={photoPreview}
         setIsEditMode={setIsEditMode}
-        styles={styles}
-        stylesForm={stylesForm}
         fileInputRef={fileInputRef}
         handleFileChange={handleFileChange}
         photoError={errors.photo}
         isLoading={isLoading}
+        styles={styles}
+        stylesForm={stylesForm}
       />
     );
   }
 
   return (
-    <section className={styles.profile}>
-      <div className="container">
-        <form
-          className={stylesForm.form__profile}
-          onSubmit={handleFormSubmit}
-          noValidate
+    <form
+      className={stylesForm.form__profile}
+      onSubmit={handleSubmit(async (data) => {
+        // Этот коллбэк вызовется ТОЛЬКО если Zod-валидация прошла успешно
+        const isSuccess = await onFormSubmit(data);
+
+        if (isSuccess) {
+          setIsEditMode(false);
+        }
+      })}
+      noValidate
+    >
+      <ProfilePhoto
+        photoPreview={photoPreview}
+        fileInputRef={fileInputRef}
+        handleFileChange={handleFileChange}
+        errorMessage={errors.photo}
+        isLoading={isLoading}
+      />
+
+      <div
+        className={`${styles["profile__info"]} ${hasAnyError ? styles.hasError : ""}`}
+      >
+        <FormField
+          className={styles["profile__info-field"]}
+          label="ФИО *"
+          errorMessage={errors.fullName}
+          icon={<Icon name="icon-label" />}
         >
-          <ProfilePhoto
-            photoPreview={photoPreview}
-            fileInputRef={fileInputRef}
-            handleFileChange={handleFileChange}
-            errorMessage={errors.photo}
-            isLoading={isLoading}
+          <input
+            type="text"
+            className={getInputClass("fullName")}
+            placeholder="Иванов Иван"
+            {...register("fullName")}
           />
-
-          <div
-            className={`${styles["profile__info"]} ${hasAnyError ? styles.hasError : ""}`}
-          >
-            <FormField
-              className={styles["profile__info-field"]}
-              label="ФИО *"
-              errorMessage={errors.fullName}
-              icon={<Icon name="icon-label" />}
-            >
-              <input
-                type="text"
-                className={getInputClass("fullName")}
-                placeholder="Иванов Иван"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-              />
-            </FormField>
-
-            <FormField
-              className={styles["profile__info-field"]}
-              label="Город"
-              errorMessage={errors.city}
-              icon={<Icon name="icon-label" />}
-            >
-              <input
-                type="text"
-                className={getInputClass("city")}
-                placeholder="Москва"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              />
-            </FormField>
-
-            <FormField
-              className={styles["profile__info-field"]}
-              label="О себе"
-              errorMessage={errors.bio}
-            >
-              <div className={styles["profile__textarea"]}>
-                <textarea
-                  className={getInputClass("bio")}
-                  placeholder="Краткое описание"
-                  value={bio}
-                  maxLength={600}
-                  onChange={(e) => setBio(e.target.value)}
-                  style={{ resize: "vertical", minHeight: "137px" }}
-                />
-                <div className={styles["profile__textarea-counter"]}>
-                  {bio.length} / 600
-                </div>
-              </div>
-            </FormField>
-
-            {/* Блок смены паролей (допишите инпуты сюда) */}
-            <div className={styles["profile__password"]}>
-              <p className={styles["profile__password-title"]}>Смена пароля</p>
-              <div className={styles["profile__password-wrapper"]}>
-                <FormField
-                  className={styles["profile__info-field"]}
-                  label="Новый пароль"
-                  errorMessage={errors.newPassword}
-                  icon={<Icon name="icon-label" />}
-                >
-                  <input
-                    type="password"
-                    className={getInputClass("newPassword")}
-                    placeholder="Новый пароль"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                  />
-                </FormField>
-
-                <FormField
-                  className={styles["profile__info-field"]}
-                  label="Повторите пароль"
-                  errorMessage={errors.repeatPassword}
-                  icon={<Icon name="icon-label" />}
-                >
-                  <input
-                    type="password"
-                    className={getInputClass("repeatPassword")}
-                    placeholder="Повторите пароль"
-                    value={repeatPassword}
-                    onChange={(e) => setRepeatPassword(e.target.value)}
-                  />
-                </FormField>
-              </div>
-
-              {errors.server && (
-                <p className={styles["profile__error-server"]}>
-                  {errors.server}
-                </p>
-              )}
-            </div>
-
-            <div className={styles["profile__btn"]}>
-              <button
-                type="button"
-                className={`${styles["profile__save-btn"]} ${styles.btn}`}
-                disabled={isLoading}
-                onClick={() => {
-                  resetForm();
-                  setIsEditMode(false);
-                }}
-              >
-                Назад
-              </button>
-
-              <button
-                type="submit"
-                className={`${styles["profile__back-btn"]}  ${styles.btn}`}
-                disabled={isLoading}
-              >
-                {isLoading ? "Сохранение..." : "Сохранить"}
-              </button>
+        </FormField>
+        <FormField
+          className={styles["profile__info-field"]}
+          label="Город"
+          errorMessage={errors.city}
+          icon={<Icon name="icon-label" />}
+        >
+          <input
+            type="text"
+            className={getInputClass("city")}
+            placeholder="Москва"
+            {...register("city")}
+          />
+        </FormField>
+        <FormField
+          className={styles["profile__info-field"]}
+          label="О себе"
+          errorMessage={errors.bio}
+        >
+          <div className={styles["profile__textarea"]}>
+            <textarea
+              className={getInputClass("bio")}
+              placeholder="Краткое описание"
+              maxLength={600}
+              style={{ resize: "vertical", minHeight: "137px" }}
+              {...register("bio")}
+            />
+            <div className={styles["profile__textarea-counter"]}>
+              {bioLength} / 600
             </div>
           </div>
-        </form>
+        </FormField>
+        <div className={styles["profile__password"]}>
+          <p className={styles["profile__password-title"]}>Смена пароля</p>
+          <div className={styles["profile__password-wrapper"]}>
+            <FormField
+              className={styles["profile__info-field"]}
+              label="Новый пароль"
+              errorMessage={errors.newPassword}
+              icon={<Icon name="icon-label" />}
+            >
+              <input
+                type="password"
+                className={getInputClass("newPassword")}
+                placeholder="Новый пароль"
+                {...register("newPassword")}
+              />
+            </FormField>
+
+            <FormField
+              className={styles["profile__info-field"]}
+              label="Повторите пароль"
+              errorMessage={errors.repeatPassword}
+              icon={<Icon name="icon-label" />}
+            >
+              <input
+                type="password"
+                className={getInputClass("repeatPassword")}
+                placeholder="Повторите пароль"
+                {...register("repeatPassword")}
+              />
+            </FormField>
+          </div>
+
+          {errors.server && (
+            <p className={styles["profile__error-server"]}>{errors.server}</p>
+          )}
+        </div>
+        \
+        <div className={styles["profile__btn"]}>
+          <button
+            type="button"
+            className={`${styles["profile__save-btn"]} ${styles.btn}`}
+            disabled={isLoading}
+            onClick={() => {
+              resetForm();
+              setIsEditMode(false);
+            }}
+          >
+            Назад
+          </button>
+
+          <button
+            type="submit"
+            className={`${styles["profile__back-btn"]} ${styles.btn}`}
+            disabled={isLoading}
+          >
+            {isLoading ? "Сохранение..." : "Сохранить"}
+          </button>
+        </div>
       </div>
-    </section>
+    </form>
   );
 };
