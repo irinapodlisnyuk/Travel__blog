@@ -1,0 +1,105 @@
+.form-post {
+  width: 100%;
+  max-width: 695px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 30px;
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 200px;
+    gap: 8px;
+    border: 1px solid var(--Neutral-5, $gainsboro);
+    border-radius: 2px;
+    padding: 5px 16px;
+    cursor: pointer;
+  }
+
+  &__label {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: rgba($black, 0.85);
+  }
+
+  &__name-photo {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: rgba($black, 0.85);
+    text-decoration: underline;
+    margin: 5px 0 0;
+  }
+
+  &__container {
+    display: flex;
+    gap: 20px;
+  }
+
+  &__textarea {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    &-counter {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 22px;
+      text-align: right;
+      color: rgba($black, 0.25);
+    }
+
+    textarea {
+      height: 100%;
+      max-height: 98px;
+    }
+  }
+
+  &__btn {
+    display: flex;
+    justify-content: space-between;
+  }
+  &__back-btn {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background-color: $white;
+    border: 2px solid $orange;
+    color: $orange;
+    transition:
+      color $transition-500,
+      background-color $transition-500;
+
+      
+
+    &:hover {
+      background-color: rgba($orange, 0.4);
+      color: $white;
+    }
+  }
+&__save-icon {
+  width: 14px;
+  height: 18px;
+}
+  &-error {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    text-align: center;
+    color: $radical-red;
+  }
+}
+.custom__input--post {
+  padding: 5px 16px 5px 38px;
+}
+.custom__input-icon {
+  top: 9px;
+  left: 17px;
+  //transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: rgba($black, 0.25);
+}

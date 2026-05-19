@@ -14,7 +14,7 @@ export const PostViewSchema = z.object({
   country: z.string(),
   city: z.string(),
   photo: z.string(),
-  comments: z.array(CommentSchema), // Валидируем массив комментариев
+  comments: z.array(CommentSchema),
   userInfo: z.object({
     full_name: z.string(),
     city: z.string(),

@@ -17,10 +17,10 @@ export const CreatePostPage: FC = () => {
   const token = localStorage.getItem("token") || "";
 
   return (
-    <section className={styles.post}>
+    <section className={styles["creat-post"]}>
       <div className="container">
-        <div className={styles["post__wrapper"]}>
-          <h2 className={styles["post__title"]}>Добавление истории о&nbsp;путешествии</h2>
+        <div className={styles["creat-post__wrapper"]}>
+          <h2 className={styles["creat-post__title"]}>Добавление истории о&nbsp;путешествии</h2>
           
           <CreatePostForm token={token} onSuccess={handleCreatePost} />
         </div>

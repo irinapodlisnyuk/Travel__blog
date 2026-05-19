@@ -1,3 +1,4 @@
+import { ICommentExtended } from "./IComment";
 import { IUserInfo } from "./IUserInfo";
 
 export interface IPost {
@@ -26,8 +27,14 @@ export interface IPostView {
   userInfo: IUserInfo;
 }
 
-
 export interface CreatePostFormProps {
   token: string;
   onSuccess?: (postId: number) => void; // Добавляем коллбэк, принимающий числовой ID
+}
+
+// Описываем типы пропсов прямо здесь для 100% надежности TypeScript
+export interface PostDetailViewProps {
+  post: IPostView;
+  comments: ICommentExtended[]; // Добавляем массив комментариев с бэка
+  onBackClick: () => void;
 }

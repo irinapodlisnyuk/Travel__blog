@@ -1,4 +1,5 @@
 .form-field {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -25,10 +26,12 @@
 
 
   &__error-text {
+    position: absolute;
     font-weight: 400;
     font-size: 14px;
     line-height: 22px;
     color: $radical-red;
+    bottom: -23px;
   }
 
 }

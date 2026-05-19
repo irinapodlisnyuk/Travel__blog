@@ -3,15 +3,18 @@ import { useNavigate } from "react-router-dom";
 import { FormField } from "../FormField/FormField";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createPostFetch } from "@/api/PostsApi"; // Скорректируйте путь к API постов
-import { CreatePostSchema, CreatePostInput } from "@/schemas/CreatePostSchema"; // Ваша Zod-схема
+import { createPostFetch } from "@/api/PostsApi";
+import { CreatePostSchema, CreatePostInput } from "@/schemas/CreatePostSchema";
 import styles from "./CreatePostForm.module.scss";
 import customStyles from "../LoginForm/custom-login.module.scss";
 import { CreatePostFormProps } from "@/components/types/IPost";
+import Icon from "@/components/types/Icon";
+import { ModalOpen } from "@/components/ModalOpen/ModalOpen";
 
 export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
   const [serverError, setServerError] = useState<string | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [createdPostId, setCreatedPostId] = useState<number | null>(null);
 
   const navigate = useNavigate();
 
@@ -27,22 +30,23 @@ export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
   });
 
   const selectedPhoto = watch("photo");
+  const descriptionValue = watch("description") || "";
+
+  const getInputClass = (fieldName: keyof CreatePostInput) =>
+    `${customStyles["custom__input"]} ${errors[fieldName] ? customStyles["custom__input--error"] : ""}`;
 
   const onSubmit = async (data: CreatePostInput) => {
     setServerError(null);
     try {
-      await createPostFetch(data, token);
-      alert("Пост успешно создан!");
 
-      // Очистка формы и URL-превью
-      reset();
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-        setPreviewUrl(null);
+      const res = await createPostFetch(data, token);
+      
+      if (res && res.id) {
+        setCreatedPostId(res.id); 
       }
-
-      // Перенаправляем пользователя на главную страницу со списком всех историй
-      navigate("/");
+      
+      setIsSuccessModalOpen(true);
+      reset();
     } catch (error: any) {
       setServerError(error.message || "Произошла ошибка при создании поста");
     }
@@ -52,110 +56,145 @@ export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
     const file = e.target.files?.[0];
     if (file) {
       setValue("photo", file, { shouldValidate: true });
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(URL.createObjectURL(file));
     }
   };
 
   return (
-    <div className={styles["post-form-container"]}>
-      {serverError && (
-        <div className={styles["server-error"]}>{serverError}</div>
-      )}
-
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        {/* ЗАГОЛОВОК */}
-        <FormField label="Заголовок" errorMessage={errors.title?.message}>
-          <input
-            type="text"
-            {...register("title")}
-            placeholder="Введите заголовок (до 255 символов)"
-            className={styles.input}
-          />
-        </FormField>
-
-        {/* СТРАНА */}
-        <FormField label="Страна" errorMessage={errors.country?.message}>
-          <input
-            type="text"
-            {...register("country")}
-            placeholder="Например: Казахстан"
-            className={styles.input}
-          />
-        </FormField>
-
-        {/* ГОРОД */}
-        <FormField label="Город" errorMessage={errors.city?.message}>
-          <input
-            type="text"
-            {...register("city")}
-            placeholder="Например: Астана"
-            className={styles.input}
-          />
-        </FormField>
-
-        {/* ОПИСАНИЕ */}
-        <FormField label="Описание" errorMessage={errors.description?.message}>
-          <textarea
-            {...register("description")}
-            placeholder="Расскажите о вашем путешествии (до 2 000 символов)"
-            rows={8}
-            className={styles.textarea}
-          />
-        </FormField>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles["form-post"]}>
+        {serverError && (
+          <div className={styles["server-error"]}>{serverError}</div>
+        )}
 
         {/* ФОТОГРАФИЯ */}
         <FormField
-          label="Фотография (только JPEG или PNG)"
+          className={styles["form-post__field"]}
           errorMessage={errors.photo?.message}
         >
-          <div className={styles["file-input-wrapper"]}>
+          <div
+            className={`${styles["form-post__wrapper"]} ${errors.photo ? customStyles["custom__input--error"] : ""}`}
+          >
+            <Icon name="upload" className={styles["custom__input-icon"]} />
             <input
               id="photo-upload"
               type="file"
               accept="image/jpeg, image/png"
               onChange={handleFileChange}
-              className={styles["hidden-file-input"]}
+              style={{ display: "none" }}
             />
-            <label htmlFor="photo-upload" className={styles["file-button"]}>
-              {selectedPhoto ? "Сменить фото" : "Загрузить файл"}
-            </label>
-            {selectedPhoto && (
-              <span className={styles["file-name"]}>{selectedPhoto.name}</span>
-            )}
-          </div>
 
-          {previewUrl && (
-            <div className={styles["image-preview-container"]}>
-              <img
-                src={previewUrl}
-                alt="Превью"
-                className={styles["image-preview"]}
-              />
-            </div>
+            <label
+              htmlFor="photo-upload"
+              className={styles["form-post__label"]}
+            >
+              {selectedPhoto ? "Сменить фото" : "Загрузите ваше фото"}
+            </label>
+          </div>
+          {selectedPhoto && (
+            <span className={styles["form-post__name-photo"]}>
+              {selectedPhoto.name}
+            </span>
           )}
         </FormField>
 
-        {/* КНОПКА ОТПРАВКИ */}
-        <div className={styles["profile__btn"]}>
+        {/* ЗАГОЛОВОК */}
+        <FormField
+          label="Заголовок"
+          errorMessage={errors.title?.message}
+          icon={<Icon name="icon-label" />}
+        >
+          <input
+            type="text"
+            {...register("title")}
+            placeholder="Заголовок"
+            className={getInputClass("title")}
+          />
+        </FormField>
+
+        <div className={styles["form-post__container"]}>
+          {/* СТРАНА */}
+          <FormField
+            label="Страна"
+            errorMessage={errors.country?.message}
+            icon={<Icon name="icon-label" />}
+          >
+            <input
+              type="text"
+              {...register("country")}
+              placeholder="Страна"
+              className={getInputClass("country")}
+            />
+          </FormField>
+
+          {/* ГОРОД */}
+          <FormField
+            label="Город"
+            errorMessage={errors.city?.message}
+            icon={<Icon name="icon-label" />}
+          >
+            <input
+              type="text"
+              {...register("city")}
+              placeholder="Город"
+              className={getInputClass("city")}
+            />
+          </FormField>
+        </div>
+
+        {/* ОПИСАНИЕ */}
+        <FormField
+          label="Описание"
+          errorMessage={errors.description?.message}
+          icon={<Icon name="icon-label" />}
+        >
+          <div className={styles["form-post__textarea"]}>
+            <textarea
+              {...register("description")}
+              placeholder="Добавьте описание вашей истории"
+              rows={8}
+              className={getInputClass("description")}
+              maxLength={2000}
+            />
+            <div className={styles["form-post__textarea-counter"]}>
+              {descriptionValue.length} / 2000
+            </div>
+          </div>
+        </FormField>
+
+        {/* КНОПКИ ОТПРАВКИ */}
+        <div className={styles["form-post__btn"]}>
           <button
             type="button"
-            className={`${styles["profile__save-btn"]} ${styles.btn}`}
+            className={`${styles["form-post__back-btn"]} ${styles.btn}`}
             disabled={isSubmitting}
             onClick={() => navigate(-1)}
           >
+            <Icon name="back-icon" className={styles["form-post__save-icon"]} />
             Назад
           </button>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`${styles["submit-btn"]} ${customStyles["btn"] || ""}`}
+            className={`${styles["form-post__save-btn"]} ${customStyles["btn"] || ""}`}
           >
             {isSubmitting ? "Сохранение..." : "Сохранить"}
           </button>
         </div>
       </form>
-    </div>
+
+      <ModalOpen
+        isOpen={isSuccessModalOpen}
+        onClose={() => {
+          setIsSuccessModalOpen(false);
+          if (createdPostId) {
+            navigate(`/posts/${createdPostId}`); 
+          } else {
+            navigate("/");
+          }
+        }}
+        text="Ваша история успешно добавлена"
+      />
+    </>
   );
 };
