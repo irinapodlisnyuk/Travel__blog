@@ -29,12 +29,12 @@ export interface IPostView {
 
 export interface CreatePostFormProps {
   token: string;
-  onSuccess?: (postId: number) => void; // Добавляем коллбэк, принимающий числовой ID
+  onSuccess?: (postId: number) => void;
 }
 
-// Описываем типы пропсов прямо здесь для 100% надежности TypeScript
-export interface PostDetailViewProps {
+
+export interface PostViewProps {
   post: IPostView;
-  comments: ICommentExtended[]; // Добавляем массив комментариев с бэка
+  comments: ICommentExtended[];
   onBackClick: () => void;
 }

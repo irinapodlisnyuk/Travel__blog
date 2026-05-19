@@ -42,7 +42,6 @@
   &__textarea {
     display: flex;
     flex-direction: column;
-    gap: 0;
 
     &-counter {
       font-weight: 400;
@@ -55,6 +54,7 @@
     textarea {
       height: 100%;
       max-height: 98px;
+      width: 100%;
     }
   }
 
@@ -73,17 +73,15 @@
       color $transition-500,
       background-color $transition-500;
 
-      
-
     &:hover {
       background-color: rgba($orange, 0.4);
       color: $white;
     }
   }
-&__save-icon {
-  width: 14px;
-  height: 18px;
-}
+  &__back-icon {
+    width: 14px;
+    height: 18px;
+  }
   &-error {
     font-weight: 400;
     font-size: 14px;
@@ -98,8 +96,21 @@
 .custom__input-icon {
   top: 9px;
   left: 17px;
-  //transform: translateY(-50%);
   width: 14px;
   height: 14px;
   color: rgba($black, 0.25);
+}
+
+.form-post__field--textarea {
+  position: relative;
+
+}
+
+.form-post__field--textarea {
+  :global(.form-field__error-text) {
+    position: absolute;
+
+    bottom: -2px; 
+    
+  }
 }

@@ -38,13 +38,12 @@ export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
   const onSubmit = async (data: CreatePostInput) => {
     setServerError(null);
     try {
-
       const res = await createPostFetch(data, token);
-      
+
       if (res && res.id) {
-        setCreatedPostId(res.id); 
+        setCreatedPostId(res.id);
       }
-      
+
       setIsSuccessModalOpen(true);
       reset();
     } catch (error: any) {
@@ -146,14 +145,18 @@ export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
           label="Описание"
           errorMessage={errors.description?.message}
           icon={<Icon name="icon-label" />}
+           className={styles["form-post__field--textarea"]}
         >
           <div className={styles["form-post__textarea"]}>
             <textarea
               {...register("description")}
               placeholder="Добавьте описание вашей истории"
               rows={8}
-              className={getInputClass("description")}
+              //   className={getInputClass("description")}
               maxLength={2000}
+              className={`${customStyles["custom__input"]} ${styles.textarea} ${
+                errors.description ? styles.textareaError : ""
+              }`}
             />
             <div className={styles["form-post__textarea-counter"]}>
               {descriptionValue.length} / 2000
@@ -169,7 +172,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
             disabled={isSubmitting}
             onClick={() => navigate(-1)}
           >
-            <Icon name="back-icon" className={styles["form-post__save-icon"]} />
+            <Icon name="back-icon" className={styles["form-post__back-icon"]} />
             Назад
           </button>
 
@@ -188,7 +191,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
         onClose={() => {
           setIsSuccessModalOpen(false);
           if (createdPostId) {
-            navigate(`/posts/${createdPostId}`); 
+            navigate(`/posts/${createdPostId}`);
           } else {
             navigate("/");
           }

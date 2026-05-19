@@ -5,7 +5,7 @@ import { LoginPage } from "./pages/Login/LoginPage";
 import { RegisterPage } from "./pages/Register/RegisterPage";
 import { CreatePostPage } from "./pages/CreatePost/CreatePostPage";
 import { ProfilePage } from "./pages/Profile/ProfilePage";
-import { PostDetailPage } from "./pages/PostDetailPage/PostDetailPage";
+import { PostPage } from "./pages/PostPage/PostPage";
 
 function App() {
   return (
@@ -18,7 +18,8 @@ function App() {
           <Route path="register" element={<RegisterPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="posts" element={<CreatePostPage />} />
-          <Route path="posts/:id" element={<PostDetailPage />} />
+          <Route path="posts/:id" element={<PostPage />} />
+          {/* <Route path="posts/:id/comment" element={<AddCommentPage />} />  */}
         </Route>
       </Routes>
     </BrowserRouter>
