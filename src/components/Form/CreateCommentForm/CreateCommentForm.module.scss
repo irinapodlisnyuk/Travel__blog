@@ -1,4 +1,4 @@
-.form-post {
+.form-comment {
   width: 100%;
   max-width: 695px;
   display: flex;
@@ -78,11 +78,11 @@
   color: rgba($black, 0.25);
 }
 
-.form-post__field--textarea {
+.form-comment__field--textarea {
   position: relative;
 }
 
-.form-post__field--textarea {
+.form-comment__field--textarea {
   :global(.form-field__error-text) {
     position: absolute;
 

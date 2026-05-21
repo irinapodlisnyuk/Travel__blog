@@ -10,6 +10,7 @@ import customStyles from "../LoginForm/custom-login.module.scss";
 import { CreatePostFormProps } from "@/components/types/IPost";
 import Icon from "@/components/types/Icon";
 import { ModalOpen } from "@/components/ModalOpen/ModalOpen";
+import { ButtonForm } from "../ButtonForm/ButtonForm";
 
 export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -165,25 +166,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
         </FormField>
 
         {/* КНОПКИ ОТПРАВКИ */}
-        <div className={styles["form-post__btn"]}>
-          <button
-            type="button"
-            className={`${styles["form-post__back-btn"]} ${styles.btn}`}
-            disabled={isSubmitting}
-            onClick={() => navigate(-1)}
-          >
-            <Icon name="back-icon" className={styles["form-post__back-icon"]} />
-            Назад
-          </button>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`${styles["form-post__save-btn"]} ${customStyles["btn"] || ""}`}
-          >
-            {isSubmitting ? "Сохранение..." : "Сохранить"}
-          </button>
-        </div>
+           <ButtonForm isSubmitting={isSubmitting}/>
       </form>
 
       <ModalOpen
