@@ -18,11 +18,23 @@ export default defineConfig({
     },
   },
   plugins: [react()],
-  base: '/Travel__blog/',
+  build: {
+    cssMinify: "esbuild", 
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            return "vendor"; 
+          }
+        },
+      },
+    },
+  },
+  base: "/Travel__blog/",
   server: {
     proxy: {
       "/api": {
-         target: "https://travelblog.skillbox.cc",
+        target: "https://travelblog.skillbox.cc",
         changeOrigin: true,
         secure: false,
       },
@@ -33,9 +45,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-    test: {
+  test: {
     globals: true,
     environment: "jsdom",
-      css: true,
+    css: true,
   },
 });
