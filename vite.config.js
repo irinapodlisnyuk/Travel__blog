@@ -18,6 +18,7 @@ export default defineConfig({
     },
   },
   plugins: [react()],
+  base: '/Travel__blog/',
   server: {
     proxy: {
       "/api": {
