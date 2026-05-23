@@ -12,7 +12,6 @@ export const LoginForm: FC = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // Состояния для интерфейса
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
