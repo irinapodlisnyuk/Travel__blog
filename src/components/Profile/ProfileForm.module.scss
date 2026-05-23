@@ -5,4 +5,11 @@
   width: 100%;
   max-width: 1110px;
   margin: 0 auto;
+
+  @include vp-767 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+  }
 }

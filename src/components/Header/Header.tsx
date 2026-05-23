@@ -83,8 +83,8 @@ const AppHeader = () => {
 
   const introText =
     isHomePage && !isAuth
-      ? "Там, где мир начинается с путешествий"
-      : "Истории ваших путешествий";
+      ? "ТАМ, ГДЕ МИР НАЧИНАЕТСЯ С ПУТЕШЕСТВИЙ"
+      : "ИСТОРИИ ВАШИХ ПУТЕШЕСТВИЙ ";
 
   return (
     <header className={styles.header}>
@@ -113,7 +113,7 @@ const AppHeader = () => {
                         alt="Аватар"
                         className={navStyles["nav__avatar-img"]}
                       />
-                      <span>{userName}</span>
+                      <span className={navStyles["nav__avatar-name"]} >{userName}</span>
                     </div>
                     <span
                       className={`${navStyles["nav-arrow"]} ${isMenuOpen ? navStyles["nav-arrow--rotated"] : ""}`}

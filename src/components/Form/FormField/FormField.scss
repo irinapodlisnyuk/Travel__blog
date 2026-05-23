@@ -22,8 +22,11 @@
     font-size: 14px;
     line-height: 22px;
     color: rgba($black, 0.85);
+    
+    @include vp-767 {
+      font-size: 12px;
+    }
   }
-
 
   &__error-text {
     position: absolute;
@@ -32,6 +35,10 @@
     line-height: 22px;
     color: $radical-red;
     bottom: -23px;
-  }
 
+    @include vp-767 {
+      font-size: 11px;
+      line-height: 16px;
+    }
+  }
 }

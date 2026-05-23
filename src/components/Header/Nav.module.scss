@@ -16,10 +16,19 @@
     gap: 8px;
     align-items: center;
 
-    &-img{
+    &-img {
       width: 30px;
       height: 30px;
       border-radius: 50%;
+    }
+
+    &-name {
+      font-weight: 400;
+      font-size: 16px;
+
+      @include vp-767 {
+        display: none;
+      }
     }
   }
 
@@ -40,21 +49,24 @@
       line-height: 1.833;
       color: $nero-black;
       cursor: pointer;
-      transition:color $transition-500;
+      transition: color $transition-500;
 
       &:hover {
-        color: rgba( $nero-black, 0.6) ;
+        color: rgba($nero-black, 0.6);
       }
     }
   }
 
   &-arrow {
-  display: inline-block; 
-  transition: transform $transition-500; 
+    display: inline-block;
+    transition: transform $transition-500;
 
-  &--rotated {
-    transform: rotate(180deg);
+    @include vp-767 {
+      display: none;
+    }
+
+    &--rotated {
+      transform: rotate(180deg);
+    }
   }
-}
-
 }

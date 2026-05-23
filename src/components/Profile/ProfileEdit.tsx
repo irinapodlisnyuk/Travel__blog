@@ -178,7 +178,6 @@ export const ProfileEdit: FC = () => {
             <p className={styles["profile__error-server"]}>{errors.server}</p>
           )}
         </div>
-        \
         <div className={styles["profile__btn"]}>
           <button
             type="button"

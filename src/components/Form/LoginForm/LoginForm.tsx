@@ -6,6 +6,7 @@ import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "@/components/types/Icon";
 
+
 export const LoginForm: FC = () => {
   const navigate = useNavigate();
 
@@ -39,10 +40,10 @@ export const LoginForm: FC = () => {
         localStorage.setItem("userName", userData.full_name);
         localStorage.setItem("userPhoto", userData.photo || "");
       }
-       navigate("/profile", { state: { openEdit: false } });
+      navigate("/profile", { state: { openEdit: false } });
 
       // перезагрузим страницу, чтобы Header увидел изменения в localStorage
-      //window.location.reload();
+      window.location.reload();
     } catch (error: any) {
       setError("Неправильный логин или пароль");
     } finally {

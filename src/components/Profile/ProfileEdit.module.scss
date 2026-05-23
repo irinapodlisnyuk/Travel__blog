@@ -1,5 +1,5 @@
 .profile {
- // padding: 24px 0;
+  // padding: 24px 0;
 
   &__wrapper {
     display: flex;
@@ -7,9 +7,14 @@
 
   &__photo {
     padding: 6px 0;
-    width: 240px;
-    min-width: 240px;
+    width: 100%;
     max-width: 240px;
+
+    @include vp-767 {
+      width: 150px;
+      height: 150px;
+      padding: 0;
+    }
 
     &-container {
       width: 100%;
@@ -17,12 +22,19 @@
       display: flex;
       flex-direction: column;
       gap: 15px;
+
+      @include vp-767 {
+        height: 150px;
+        padding: 0;
+      }
     }
   }
 
   &__preview-wrapper {
     width: 100%;
-    height: 240px;
+    // height: 240px;
+
+    height: 100%;
     display: flex;
     align-items: center;
     border-radius: 10px;
@@ -46,6 +58,11 @@
     &-icon {
       width: 24px;
       height: 22px;
+
+      @include vp-767 {
+        width: 20px;
+        height: 18px;
+      }
     }
 
     &-btn {
@@ -55,6 +72,10 @@
       text-decoration-line: underline;
       color: $orange;
       cursor: pointer;
+
+      @include vp-767 {
+        font-size: 14px;
+      }
     }
   }
 
@@ -62,6 +83,10 @@
     display: flex;
     flex-direction: column;
     gap: 30px;
+
+    @include vp-767 {
+      gap: 15px;
+    }
 
     &-field label {
       font-weight: 400;
@@ -100,11 +125,20 @@
       font-size: 18px;
       line-height: 22px;
       color: rgba($black, 0.85);
+
+      @include vp-767 {
+        font-size: 16px;
+      }
     }
 
     &-wrapper {
       display: flex;
       gap: 20px;
+
+      @include vp-767 {
+        flex-direction: column;
+        gap: 10px;
+      }
     }
   }
 

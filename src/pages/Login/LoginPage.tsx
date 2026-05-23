@@ -1,6 +1,7 @@
 import styles from "./LoginPage.module.scss";
 import { LoginForm } from "@/components/Form/LoginForm";
 export const LoginPage = () => {
+
   return (
     <section className={styles.login}>
       <div className="container">

@@ -6,15 +6,15 @@
   gap: 30px;
   align-items: flex-start;
 
+  @include vp-767 {
+    padding: 10px;
+  }
+
   &-field {
     width: 100%;
     gap: 30px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-
-    &.hasError {
-      gap: 7px;
-    }
   }
 }
 .first {

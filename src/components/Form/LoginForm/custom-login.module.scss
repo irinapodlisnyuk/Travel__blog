@@ -17,10 +17,14 @@
     font-size: 14px;
     line-height: 22px;
     color: rgba($black, 0.25);
+
+    @include vp-767 {
+      font-size: 12px;
+    }
   }
 
   &--error {
     border: 1px solid $radical-red;
-    outline: none; 
+    outline: none;
   }
 }

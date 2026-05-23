@@ -1,14 +1,15 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: 26px;
+  gap: 22px;
   box-shadow: 0px 1px 10px 0px rgba($black, 0.1);
   border-radius: 10px;
-  min-height: 552px;
+  // min-height: 552px;
+  min-height: 545px;
+    height: 100%;
 
   &__post {
-    height: 100%;
-    max-height: 288px;
+    height: 288px;
 
     &-image {
       border-radius: 10px 10px 0 0;
@@ -53,7 +54,7 @@
   &__intro {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 18px;
   }
   &__location {
     font-weight: 500;
