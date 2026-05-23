@@ -33,6 +33,10 @@
   line-height: 36px;
   text-align: center;
   color: $nero;
+
+     @include vp-767 {
+      font-size: 18px;
+    }
 }
 
 .modal-btn {

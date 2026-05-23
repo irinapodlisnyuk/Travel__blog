@@ -6,6 +6,10 @@
   align-items: stretch;
   gap: 30px;
 
+  @include vp-767 {
+    padding: 0 10px;
+  }
+
   &__wrapper {
     display: flex;
     align-items: center;
