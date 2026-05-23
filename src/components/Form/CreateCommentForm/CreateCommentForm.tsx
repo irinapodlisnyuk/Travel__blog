@@ -13,7 +13,7 @@ import {
 import Icon from "@/components/types/Icon";
 
 import styles from "./CreateCommentForm.module.scss";
-import customStyles from "../LoginForm/custom-login.module.scss";
+import customStyles from "../LoginForm/Custom-login.module.scss";
 import { ButtonForm } from "../ButtonForm/ButtonForm";
 
 interface CreateCommentFormProps {

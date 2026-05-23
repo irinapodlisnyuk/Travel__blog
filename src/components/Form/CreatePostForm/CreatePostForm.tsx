@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createPostFetch } from "@/api/PostsApi";
 import { CreatePostSchema, CreatePostInput } from "@/schemas/CreatePostSchema";
 import styles from "./CreatePostForm.module.scss";
-import customStyles from "../LoginForm/custom-login.module.scss";
+import customStyles from "../LoginForm/Custom-login.module.scss";
 import { CreatePostFormProps } from "@/components/types/IPost";
 import Icon from "@/components/types/Icon";
 import { ModalOpen } from "@/components/ModalOpen/ModalOpen";

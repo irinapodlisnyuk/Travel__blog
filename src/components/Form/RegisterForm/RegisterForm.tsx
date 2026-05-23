@@ -10,7 +10,7 @@ import Icon from "@/components/types/Icon";
 import { RegisterFormProps } from "@/components/types/form";
 
 import styles from "./RegisterForm.module.scss";
-import customStyles from "../LoginForm/custom-login.module.scss";
+import customStyles from "../LoginForm/Custom-login.module.scss";
 
 export const RegisterForm: FC<RegisterFormProps> = ({ onSuccess }) => {
   const navigate = useNavigate();
