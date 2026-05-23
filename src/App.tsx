@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {  Routes, Route, HashRouter } from "react-router-dom";
 import Layout from "./app/layout";
 import Home from "./pages/Home/Home";
 import { LoginPage } from "./pages/Login/LoginPage";
@@ -10,7 +10,8 @@ import { CreateCommentPage } from "./pages/CreateComment/CreateCommentPage";
 
 function App() {
   return (
-    <BrowserRouter basename="/Travel__blog">
+    // <BrowserRouter basename="/Travel__blog">
+        <HashRouter>
       <Routes>
         {/* Layout — родительский роут, он всегда на экране */}
         <Route path="/" element={<Layout />}>
@@ -23,7 +24,8 @@ function App() {
           <Route path="posts/:id/comment" element={<CreateCommentPage />} /> 
         </Route>
       </Routes>
-    </BrowserRouter>
+      </HashRouter>
+    // </BrowserRouter>
   );
 }
 
