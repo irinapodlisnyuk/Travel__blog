@@ -1,7 +1,7 @@
 import { FormField } from "../FormField";
 import { fetchMe, loginUser } from "../../../api/User";
 import styles from "./LoginForm.module.scss"; 
-import customStyles from "./Custom-login.module.scss";
+import customStyles from "./custom-login.module.scss";
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Icon from "@/components/types/Icon";
