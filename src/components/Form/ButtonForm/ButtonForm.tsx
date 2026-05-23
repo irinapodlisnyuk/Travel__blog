@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import customStyles from "../LoginForm/custom-login.module.scss";
+import customStyles from "../LoginForm/Custom-login.module.scss";
 import styles from "./ButtonForm.module.scss";
 import Icon from "@/components/types/Icon";
 

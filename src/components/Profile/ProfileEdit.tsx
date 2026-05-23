@@ -9,7 +9,7 @@ import { ProfileLocation } from "../types/Profile";
 
 import styles from "./ProfileEdit.module.scss";
 import stylesForm from "./ProfileForm.module.scss";
-import customStyles from "@/components/Form/LoginForm/custom-login.module.scss";
+import customStyles from "@/components/Form/LoginForm/Custom-login.module.scss";
 import { useProfileForm } from "@/hooks/useProfileForm";
 import LoaderPage from "../LoaderPage/LoaderPage";
 
