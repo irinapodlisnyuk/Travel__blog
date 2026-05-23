@@ -10,7 +10,7 @@ import { CreateCommentPage } from "./pages/CreateComment/CreateCommentPage";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Travel__blog">
       <Routes>
         {/* Layout — родительский роут, он всегда на экране */}
         <Route path="/" element={<Layout />}>
