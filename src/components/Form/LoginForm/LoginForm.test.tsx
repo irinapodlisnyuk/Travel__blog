@@ -1,105 +1,125 @@
-// import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-// import { LoginForm } from "./LoginForm";
-// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import { loginUser } from "../../../api/User";
-// import "@testing-library/jest-dom";
+import { render, screen, waitFor} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import "@testing-library/jest-dom/vitest";
+import { vi, describe, it, expect, beforeEach, afterEach  } from "vitest";
+import { LoginForm } from "./LoginForm";
+import { loginUser, fetchMe } from "../../../api/User";
 
-// // 1. Мокаем функцию API
-// jest.mock("../../../api/User", () => ({
-//   loginUser: jest.fn(),
-// }));
+// 1. Мокаем react-router-dom
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", () => ({
+  useNavigate: () => mockNavigate,
+}));
 
-// // 2. Создаем чистый QueryClient для тестов
-// const createTestQueryClient = () =>
-//   new QueryClient({
-//     defaultOptions: {
-//       queries: { retry: false },
-//       mutations: { retry: false },
-//     },
-//   });
+// 2. Мокаем API-запросы
+vi.mock("../../../api/User", () => ({
+  loginUser: vi.fn(),
+  fetchMe: vi.fn(),
+}));
 
-// describe("LoginForm Component", () => {
-//   let queryClient: QueryClient;
+// 3. Мокаем window.location.reload
+const originalLocation = window.location;
+beforeEach(() => {
+  vi.clearAllMocks();
+  localStorage.clear();
 
-//   beforeEach(() => {
-//     queryClient = createTestQueryClient();
-//     jest.clearAllMocks();
-//   });
+  // Создаем безопасный шпион для перезагрузки страницы
+  Object.defineProperty(window, "location", {
+    configurable: true,
+    value: { reload: vi.fn() },
+  });
+});
 
-//   const setup = () =>
-//     render(
-//       <QueryClientProvider client={queryClient}>
-//         <LoginForm />
-//       </QueryClientProvider>,
-//     );
+afterEach(() => {
+  Object.defineProperty(window, "location", {
+    configurable: true,
+    value: originalLocation,
+  });
+});
 
-//   test("должен обновлять поля ввода email и password", () => {
-//     setup();
-//     const emailInput = screen.getByPlaceholderText(
-//       /электронная почта/i,
-//     ) as HTMLInputElement;
-//     const passwordInput = screen.getByPlaceholderText(
-//       /пароль/i,
-//     ) as HTMLInputElement;
+describe("LoginForm", () => {
+  it("должен корректно рендерить поля формы и кнопки", () => {
+    render(<LoginForm />);
 
-//     fireEvent.change(emailInput, { target: { value: "test@test.com" } });
-//     fireEvent.change(passwordInput, { target: { value: "123456" } });
+    expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Пароль")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /войти/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /зарегистрироваться/i }),
+    ).toBeInTheDocument();
+  });
 
-//     expect(emailInput.value).toBe("test@test.com");
-//     expect(passwordInput.value).toBe("123456");
-//   });
+  it("должен перенаправлять на страницу регистрации при клике", async () => {
+    render(<LoginForm />);
 
-//   test("должен вызывать loginUser при отправке формы", async () => {
-//     (loginUser as jest.Mock).mockResolvedValue({
-//       id: "1",
-//       email: "test@test.com",
-//     });
-//     setup();
+    const registerButton = screen.getByRole("button", {
+      name: /зарегистрироваться/i,
+    });
+    await userEvent.click(registerButton);
 
-//     fireEvent.change(screen.getByPlaceholderText(/электронная почта/i), {
-//       target: { value: "user@mail.ru" },
-//     });
-//     fireEvent.change(screen.getByPlaceholderText(/пароль/i), {
-//       target: { value: "password123" },
-//     });
+    expect(mockNavigate).toHaveBeenCalledWith("/register");
+  });
 
-//     fireEvent.submit(screen.getByRole("button", { name: /войти/i }));
+  it("должен сохранять данные в localStorage и перезагружать страницу при успешном логине", async () => {
+    // Настраиваем успешные ответы от API функций
+    vi.mocked(loginUser).mockResolvedValueOnce({ token: "fake-jwt-token" });
+    vi.mocked(fetchMe).mockResolvedValueOnce({
+      full_name: "Петр Петров",
+      photo: "avatar.png",
+    }as any);
 
-//     await waitFor(() => {
-//       expect(loginUser).toHaveBeenCalledWith("user@mail.ru", "password123");
-//     });
-//   });
+    render(<LoginForm />);
 
-//   test("должен показывать состояние загрузки в кнопке", async () => {
-//     // Имитируем долгий ответ
-//     (loginUser as jest.Mock).mockReturnValue(
-//       new Promise((resolve) => setTimeout(resolve, 100)),
-//     );
-//     setup();
+    const emailInput = screen.getByPlaceholderText("Email");
+    const passwordInput = screen.getByPlaceholderText("Пароль");
+    const submitButton = screen.getByRole("button", { name: /войти/i });
 
-//     fireEvent.submit(screen.getByRole("button", { name: /войти/i }));
+    // Заполняем форму
+    await userEvent.type(emailInput, "test@example.com");
+    await userEvent.type(passwordInput, "secret123");
+    await userEvent.click(submitButton);
 
-//     // Ждем, пока React увидит изменение стейта и заблокирует кнопку
-//     await waitFor(() => {
-//       const button = screen.getByRole("button", { name: /войти/i });
-//       expect(button).toBeDisabled();
-//     });
-//   });
+    // Проверяем, что функции API вызвались с верными параметрами
+    expect(loginUser).toHaveBeenCalledWith("test@example.com", "secret123");
 
-//   test("должен добавлять класс ошибки при неудачном входе", async () => {
-//     (loginUser as jest.Mock).mockRejectedValue(new Error("Unauthorized"));
-//     setup();
+    // Ждем выполнения асинхронных операций записи в localStorage и редиректа
+    await waitFor(() => {
+      expect(localStorage.getItem("token")).toBe("fake-jwt-token");
+      expect(localStorage.getItem("userName")).toBe("Петр Петров");
+      expect(localStorage.getItem("userPhoto")).toBe("avatar.png");
+    });
 
-//     fireEvent.submit(screen.getByRole("button", { name: /войти/i }));
+    // Проверяем редирект в профиль
+    expect(mockNavigate).toHaveBeenCalledWith("/profile", {
+      state: { openEdit: false },
+    });
 
-//     await waitFor(() => {
- 
-//       const emailField = screen
-//         .getByPlaceholderText(/электронная почта/i)
-//         .closest(".form-field");
+    // Проверяем триггер перезагрузки страницы
+    expect(window.location.reload).toHaveBeenCalledTimes(1);
+  });
 
-//       expect(emailField).not.toBeNull(); // На всякий случай проверим, что нашли элемент
-//       expect(emailField).toHaveClass("error-message__login");
-//     });
-//   });
-// });
+  it("должен отображать ошибку при неверных учетных данных", async () => {
+    // Имитируем ошибку сервера
+    vi.mocked(loginUser).mockRejectedValueOnce(new Error("Unauthorized"));
+
+    render(<LoginForm />);
+
+    const emailInput = screen.getByPlaceholderText("Email");
+    const passwordInput = screen.getByPlaceholderText("Пароль");
+    const submitButton = screen.getByRole("button", { name: /войти/i });
+
+    await userEvent.type(emailInput, "wrong@example.com");
+    await userEvent.type(passwordInput, "wrongpass");
+    await userEvent.click(submitButton);
+
+    // Ожидаем появление текста ошибки на экране
+    const errorMessage = await screen.findByText(
+      "Неправильный логин или пароль",
+    );
+    expect(errorMessage).toBeInTheDocument();
+
+    // Проверяем, что fetchMe НЕ вызывался
+    expect(fetchMe).not.toHaveBeenCalled();
+  });
+});
+
