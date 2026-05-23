@@ -28,7 +28,7 @@ export const ProfilePhoto = memo(
           <div className={styles["profile__photo-container"]}>
             <div className={styles["profile__preview-wrapper"]}>
               <img
-                src={photoPreview || "/images/avatar.jpg"}
+                src={photoPreview || `${import.meta.env.BASE_URL}images/avatar.jpg`}
                 alt={photoPreview ? "Фото профиля" : "Дефолтный аватар пользователя"}
                 className={styles["profile__preview-img"]}
               />
