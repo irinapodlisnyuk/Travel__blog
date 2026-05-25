@@ -109,7 +109,7 @@ const AppHeader = () => {
                   >
                     <div className={navStyles["nav__avatar"]}>
                       <img
-                        src={userPhoto || `${BASE_URL}images/avatar.jpg`}
+                        src={userPhoto || `${import.meta.env.BASE_URL}images/avatar.jpg`}
                         alt="Аватар"
                         className={navStyles["nav__avatar-img"]}
                       />
