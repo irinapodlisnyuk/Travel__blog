@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import Icon from "../types/Icon";
 import { useEffect, useState } from "react";
 import { logoutUser } from "@/api/User";
+import { BASE_URL } from "@/api/config";
 
 const AppHeader = () => {
   const navigate = useNavigate();
@@ -109,7 +110,7 @@ const AppHeader = () => {
                   >
                     <div className={navStyles["nav__avatar"]}>
                       <img
-                        src={userPhoto || "/images/avatar.jpg"}
+                        src={userPhoto || `${BASE_URL}/images/avatar.jpg`}
                         alt="Аватар"
                         className={navStyles["nav__avatar-img"]}
                       />
