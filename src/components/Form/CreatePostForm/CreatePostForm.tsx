@@ -146,7 +146,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
           label="Описание"
           errorMessage={errors.description?.message}
           icon={<Icon name="icon-label" />}
-           className={styles["form-post__field--textarea"]}
+          className={styles["form-post__field--textarea"]}
         >
           <div className={styles["form-post__textarea"]}>
             <textarea
@@ -166,18 +166,14 @@ export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
         </FormField>
 
         {/* КНОПКИ ОТПРАВКИ */}
-           <ButtonForm isSubmitting={isSubmitting}/>
+        <ButtonForm isSubmitting={isSubmitting} />
       </form>
 
       <ModalOpen
         isOpen={isSuccessModalOpen}
         onClose={() => {
           setIsSuccessModalOpen(false);
-          if (createdPostId) {
-            navigate(`/posts/${createdPostId}`);
-          } else {
-            navigate("/");
-          }
+          navigate(`/posts/${createdPostId}`);
         }}
         text="Ваша история успешно добавлена"
       />
