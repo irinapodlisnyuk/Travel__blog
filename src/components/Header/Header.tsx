@@ -27,25 +27,46 @@ const AppHeader = () => {
       setUserName(
         storedName && storedName !== "undefined" && storedName.trim() !== ""
           ? storedName
-          : "Путешественник",
+          : "User-Travel",
       );
-      setUserPhoto(
-        storedPhoto && storedPhoto !== "undefined" ? storedPhoto : "",
-      );
+
+      if (
+        storedPhoto &&
+        storedPhoto !== "undefined" &&
+        storedPhoto.trim() !== ""
+      ) {
+        if (storedPhoto.startsWith("/")) {
+          setUserPhoto(`${BASE_URL}${storedPhoto}`);
+        } else {
+          setUserPhoto(storedPhoto);
+        }
+      } else {
+        setUserPhoto("");
+      }
     };
 
-    // 1. Считываем данные при монтировании или смене страницы
     updateUserData();
-
-    // 2. Подписываемся на событие обновления данных для синхронизации на одной странице
     window.addEventListener("storage", updateUserData);
-
-    // Очищаем слушатель при размонтировании
     return () => window.removeEventListener("storage", updateUserData);
   }, [location.pathname]);
+  
+  //     setUserPhoto(
+  //       storedPhoto && storedPhoto !== "undefined" ? storedPhoto : "",
+  //     );
+  //   };
+
+  //   // 1. Считываем данные при монтировании или смене страницы
+  //   updateUserData();
+
+  //   // 2. Подписываемся на событие обновления данных для синхронизации на одной странице
+  //   window.addEventListener("storage", updateUserData);
+
+  //   // Очищаем слушатель при размонтировании
+  //   return () => window.removeEventListener("storage", updateUserData);
+  // }, [location.pathname]);
+
   useEffect(() => {
     if (!isMenuOpen) return;
-
     const closeMenu = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       // Безопасная проверка существования класса перед вызовом closest
@@ -109,11 +130,13 @@ const AppHeader = () => {
                   >
                     <div className={navStyles["nav__avatar"]}>
                       <img
-                        src={userPhoto || `${import.meta.env.BASE_URL}images/avatar.jpg`}
+                        src={userPhoto || "/images/avatar.jpg"}
                         alt="Аватар"
                         className={navStyles["nav__avatar-img"]}
                       />
-                      <span className={navStyles["nav__avatar-name"]} >{userName}</span>
+                      <span className={navStyles["nav__avatar-name"]}>
+                        {userName}
+                      </span>
                     </div>
                     <span
                       className={`${navStyles["nav-arrow"]} ${isMenuOpen ? navStyles["nav-arrow--rotated"] : ""}`}
