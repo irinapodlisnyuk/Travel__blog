@@ -49,21 +49,6 @@ const AppHeader = () => {
     window.addEventListener("storage", updateUserData);
     return () => window.removeEventListener("storage", updateUserData);
   }, [location.pathname]);
-  
-  //     setUserPhoto(
-  //       storedPhoto && storedPhoto !== "undefined" ? storedPhoto : "",
-  //     );
-  //   };
-
-  //   // 1. Считываем данные при монтировании или смене страницы
-  //   updateUserData();
-
-  //   // 2. Подписываемся на событие обновления данных для синхронизации на одной странице
-  //   window.addEventListener("storage", updateUserData);
-
-  //   // Очищаем слушатель при размонтировании
-  //   return () => window.removeEventListener("storage", updateUserData);
-  // }, [location.pathname]);
 
   useEffect(() => {
     if (!isMenuOpen) return;
