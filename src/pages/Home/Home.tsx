@@ -5,19 +5,31 @@ import { getPosts } from "@/api/PostsApi";
 import { PostCard } from "@/components/PostCard/PostCard";
 
 import Loading from "@/loading";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Home = () => {
+  const location = useLocation();
   const [posts, setPosts] = useState<IPost[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Проверка авторизации для кнопки
-  const isAuth = !!localStorage.getItem("token");
+  const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
+
+
+    useEffect(() => {
+    const checkAuth = () => {
+      setIsAuth(!!localStorage.getItem("token"));
+    };
+    // Проверяем токен при открытии страницы или переходе на неё
+    checkAuth();
+    // Слушаем изменения из других вкладок
+    window.addEventListener("storage", checkAuth);
+    return () => window.removeEventListener("storage", checkAuth);
+  }, [location.pathname]); 
+
 
   useEffect(() => {
     getPosts()
       .then((data) => {
-        // 1. Перемешиваем весь массив случайным образом
         const shuffled = [...data].sort(() => 0.5 - Math.random());
 
         setPosts(shuffled.slice(0, 6));
@@ -42,12 +54,12 @@ const Home = () => {
             </div>
           )}
           {isAuth && (
-            <Link to="/posts" >
-            <button className={`${styles["home__add-btn"]} ${styles.btn}`}>
-              Добавить моё путешествие
-            </button>
+            <Link to="/posts">
+              <button className={`${styles["home__add-btn"]} ${styles.btn}`}>
+                Добавить моё путешествие
+              </button>
             </Link>
-           )} 
+          )}
         </div>
       </div>
     </section>
