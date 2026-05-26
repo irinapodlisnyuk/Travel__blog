@@ -5,7 +5,7 @@ export interface IPost {
   id: number;
   title: string;
   excerpt: string;
-  counry: string;
+  county: string;
   city: string;
   photo: string;
 }
