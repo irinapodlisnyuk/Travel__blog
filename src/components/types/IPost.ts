@@ -1,19 +1,12 @@
 import { ICommentExtended } from "./IComment";
 import { IUserInfo } from "./IUserInfo";
 
-// export interface IPost {
-//   id: number;
-//   title: string;
-//   excerpt: string;
-//   country: string;
-//   city: string;
-//   photo: string;
-// }
-
 export interface IPost {
   id: number;
   title: string;
   excerpt: string;
+  counry: string;
+  city: string;
   photo: string;
 }
 
