@@ -1,13 +1,19 @@
 import { ICommentExtended } from "./IComment";
 import { IUserInfo } from "./IUserInfo";
 
+// export interface IPost {
+//   id: number;
+//   title: string;
+//   excerpt: string;
+//   country: string;
+//   city: string;
+//   photo: string;
+// }
+
 export interface IPost {
   id: number;
   title: string;
   excerpt: string;
-    location: string;
-  // country: string;
-  city: string;
   photo: string;
 }
 
@@ -37,4 +43,24 @@ export interface PostViewProps {
   post: IPostView;
   comments: ICommentExtended[];
   onBackClick: () => void;
+}
+
+
+export interface IFullPost {
+  id: number;
+  title: string;
+  description: string;
+  country: string; 
+  city: string;   
+  photo: string;
+  comments: {
+    author_name: string;
+    comment: string;
+    created_at: string;
+  }[];
+  userInfo: {
+    full_name: string;
+    city: string;
+    bio: string;
+  };
 }
