@@ -27,14 +27,14 @@
     display: grid;
     gap: 30px;
     // grid-template-columns: repeat(3, minmax(0, 370px));
-    grid-template-columns: repeat(auto-fill, 370px);
+    grid-template-columns: repeat(auto-fill, minmax(0, 370px));
     justify-content: center;
     width: 100%;
 
     @include vp-1023 {
       display: grid;
       gap: 30px;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 370px));
+      grid-template-columns: repeat(auto-fill, minmax(0, 370px));
       justify-content: center;
       width: 100%;
     }

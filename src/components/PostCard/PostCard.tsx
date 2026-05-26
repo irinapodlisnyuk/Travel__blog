@@ -24,7 +24,7 @@ export const PostCard = ({ post }: PostCardProps) => {
         <p className={styles.card__excerpt}>{post.excerpt}</p>
         <div className={styles.card__intro}>
           <span className={styles["card__location"]}>
-            {post.country} {post.city}
+              {post.location} {post.city}
           </span>
           <Link  className={styles["card__details-btn"]} to={`/posts/${post.id}`}>Подробнее</Link>
         </div>

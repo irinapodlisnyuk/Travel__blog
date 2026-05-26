@@ -5,7 +5,8 @@ export interface IPost {
   id: number;
   title: string;
   excerpt: string;
-  country: string;
+    location: string;
+  // country: string;
   city: string;
   photo: string;
 }
@@ -31,7 +32,6 @@ export interface CreatePostFormProps {
   token: string;
   onSuccess?: (postId: number) => void;
 }
-
 
 export interface PostViewProps {
   post: IPostView;
