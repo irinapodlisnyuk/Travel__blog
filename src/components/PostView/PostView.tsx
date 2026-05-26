@@ -22,9 +22,8 @@ export const PostView: FC<PostViewProps> = ({
     if (!token) {
       navigate("/login");
     } else {
-
-       navigate(`/posts/${id}/comment`); 
-  }
+      navigate(`/posts/${id}/comment`);
+    }
   };
 
   return (

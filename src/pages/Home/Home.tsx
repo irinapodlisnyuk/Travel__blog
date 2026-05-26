@@ -14,8 +14,7 @@ const Home = () => {
 
   const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
 
-
-    useEffect(() => {
+  useEffect(() => {
     const checkAuth = () => {
       setIsAuth(!!localStorage.getItem("token"));
     };
@@ -23,9 +22,13 @@ const Home = () => {
     checkAuth();
     // Слушаем изменения из других вкладок
     window.addEventListener("storage", checkAuth);
-    return () => window.removeEventListener("storage", checkAuth);
-  }, [location.pathname]); 
+    window.addEventListener("authChange", checkAuth);
 
+    return () => {
+      window.removeEventListener("storage", checkAuth);
+      window.removeEventListener("authChange", checkAuth);
+    };
+  }, [location.pathname]);
 
   useEffect(() => {
     getPosts()

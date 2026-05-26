@@ -12,7 +12,7 @@ const AppHeader = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
-  const [userName, setUserName] = useState("Путешественник");
+  const [userName, setUserName] = useState("User-Travel");
   const [userPhoto, setUserPhoto] = useState("");
 
   const isHomePage = location.pathname === "/";
@@ -47,7 +47,11 @@ const AppHeader = () => {
 
     updateUserData();
     window.addEventListener("storage", updateUserData);
-    return () => window.removeEventListener("storage", updateUserData);
+    window.addEventListener("authChange", updateUserData);
+    return ()  => {
+      window.removeEventListener("storage", updateUserData);
+      window.removeEventListener("authChange", updateUserData);
+    };
   }, [location.pathname]);
 
   useEffect(() => {
@@ -79,6 +83,7 @@ const AppHeader = () => {
       setUserName("Путешественник");
       setUserPhoto("");
       setIsMenuOpen(false);
+      window.dispatchEvent(new Event("authChange"));
       navigate("/");
     }
   };
