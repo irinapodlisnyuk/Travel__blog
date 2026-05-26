@@ -121,7 +121,7 @@ export const CreateCommentForm: FC<CreateCommentFormProps> = ({
         isOpen={isSuccessModalOpen}
         onClose={() => {
           setIsSuccessModalOpen(false);
-          navigate(`/posts/${postId}`);
+          navigate(`/posts/${postId}`, { replace: true });
         }}
         text="Ваш отзыв успешно добавлен"
       />
