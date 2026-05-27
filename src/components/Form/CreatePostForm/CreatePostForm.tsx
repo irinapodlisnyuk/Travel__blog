@@ -12,7 +12,8 @@ import Icon from "@/components/types/Icon";
 import { ModalOpen } from "@/components/ModalOpen/ModalOpen";
 import { ButtonForm } from "../ButtonForm/ButtonForm";
 
-export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
+
+export const CreatePostForm: FC<CreatePostFormProps> = ({ token, onSuccess }) => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [createdPostId, setCreatedPostId] = useState<number | null>(null);
@@ -171,9 +172,14 @@ export const CreatePostForm: FC<CreatePostFormProps> = ({ token }) => {
 
       <ModalOpen
         isOpen={isSuccessModalOpen}
-        onClose={() => {
+         onClose={() => {
           setIsSuccessModalOpen(false);
-          navigate(`/posts/${createdPostId}`);
+        
+          if (onSuccess && createdPostId) {
+            onSuccess(createdPostId);
+          } else if (createdPostId) {
+            navigate(`/posts/${createdPostId}`);
+          }
         }}
         text="Ваша история успешно добавлена"
       />

@@ -1,17 +1,15 @@
 import { FC } from "react";
-import { useNavigate } from "react-router-dom";
 import styles from "./CreatePostPage.module.scss"; 
 import { CreatePostForm } from "@/components/Form/CreatePostForm/CreatePostForm";
 
 export const CreatePostPage: FC = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-
-  const handleCreatePost = (postId: number) => {
-    console.log(`Пост успешно создан с ID: ${postId}`);
+  // const handleCreatePost = (postId: number) => {
+  //   console.log(`Пост успешно создан с ID: ${postId}`);
     
-    navigate(`/posts/${postId}`); 
-  };
+  //   navigate(`/posts/${postId}`); 
+  // };
 
   // Получаем токен из localStorage для авторизованного запроса
   const token = localStorage.getItem("token") || "";
@@ -22,7 +20,7 @@ export const CreatePostPage: FC = () => {
         <div className={styles["create-post__wrapper"]}>
           <h2 className={styles["create-post__title"]}>Добавление истории о&nbsp;путешествии</h2>
           
-          <CreatePostForm token={token} onSuccess={handleCreatePost} />
+          <CreatePostForm token={token}  />
         </div>
       </div>
     </section>

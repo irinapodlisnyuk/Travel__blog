@@ -15,7 +15,8 @@ export const getPosts = async (): Promise<IPost[]> => {
 };
 
 export const getPostById = async (id: string | number): Promise<IPostView> => {
-  const response = await fetch(`${BASE_URL}/api/posts/${id}`);
+  //const response = await fetch(`${BASE_URL}/api/posts/${id}`);
+  const response = await fetch(`/api/posts/${id}`);
 
   const validResponse = await validateResponse(response);
 
@@ -34,8 +35,8 @@ export const createPostFetch = async (
   formData.append("city", data.city);
   formData.append("photo", data.photo);
 
-  const response = await fetch("/api/posts", {
-  // const response = await fetch(`${BASE_URL}/api/posts`, {
+  // const response = await fetch("/api/posts", {
+  const response = await fetch(`${BASE_URL}/api/posts`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
