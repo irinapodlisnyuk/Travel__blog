@@ -11,6 +11,7 @@ import { CreatePostFormProps } from "@/components/types/IPost";
 import Icon from "@/components/types/Icon";
 import { ModalOpen } from "@/components/ModalOpen/ModalOpen";
 import { ButtonForm } from "../ButtonForm/ButtonForm";
+import { compressImage } from "@/utils/compressImage";
 
 
 export const CreatePostForm: FC<CreatePostFormProps> = ({ token, onSuccess }) => {
@@ -53,13 +54,36 @@ export const CreatePostForm: FC<CreatePostFormProps> = ({ token, onSuccess }) =>
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setValue("photo", file, { shouldValidate: true });
-    }
-  };
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     setValue("photo", file, { shouldValidate: true });
+  //   }
+  // };
 
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  try {
+    // Вызываем вашу утилиту сжатия
+    const compressedBlob = await compressImage(file);
+
+    // Превращаем Blob обратно в File, чтобы прошел проверку Zod (instanceof File)
+    const compressedFile = new File([compressedBlob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+      type: "image/jpeg",
+      lastModified: Date.now(),
+    });
+
+    // Записываем готовый легкий файл в форму
+    setValue("photo", compressedFile, { shouldValidate: true });
+    setServerError(null); // Сбрасываем старые ошибки, если они висели
+  } catch (err: any) {
+    setServerError("Не удалось обработать и сжать изображение");
+    console.error(err);
+  }
+};
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className={styles["form-post"]}>
