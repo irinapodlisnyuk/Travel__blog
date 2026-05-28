@@ -35,8 +35,8 @@ export const createPostFetch = async (
   formData.append("city", data.city);
   formData.append("photo", data.photo);
 
-  const response = await fetch("/api/posts", {
-  // const response = await fetch(`${BASE_URL}/api/posts`, {
+  // const response = await fetch("/api/posts", {
+  const response = await fetch(`${BASE_URL}/api/posts`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
