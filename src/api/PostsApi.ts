@@ -4,8 +4,8 @@ import { CreatePostInput } from "@/schemas/CreatePostSchema";
 import { BASE_URL } from "./config";
 
 export const getPosts = async (): Promise<IPost[]> => {
-  const response = await fetch('/api/posts');
-  // const response = await fetch(`${BASE_URL}/api/posts`);
+  // const response = await fetch('/api/posts');
+  const response = await fetch(`${BASE_URL}/api/posts`);
 
   if (!response.ok) {
     throw new Error("Не удалось загрузить истории");
@@ -15,8 +15,8 @@ export const getPosts = async (): Promise<IPost[]> => {
 };
 
 export const getPostById = async (id: string | number): Promise<IPostView> => {
-  //const response = await fetch(`${BASE_URL}/api/posts/${id}`);
-  const response = await fetch(`/api/posts/${id}`);
+  const response = await fetch(`${BASE_URL}/api/posts/${id}`);
+  // const response = await fetch(`/api/posts/${id}`);
 
   const validResponse = await validateResponse(response);
 
@@ -35,8 +35,8 @@ export const createPostFetch = async (
   formData.append("city", data.city);
   formData.append("photo", data.photo);
 
-  // const response = await fetch("/api/posts", {
-  const response = await fetch(`${BASE_URL}/api/posts`, {
+  const response = await fetch("/api/posts", {
+  // const response = await fetch(`${BASE_URL}/api/posts`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
