@@ -84,7 +84,7 @@ export const PostView: FC<PostViewProps> = ({
                 Назад
               </button>
               <button
-                type="button" // Меняем submit на button, так как это просто триггер действия
+                type="button" 
                 className={`${styles["post__review-btn"]} ${styles.btn || ""}`}
                 onClick={() => handleReviewClick(post.id)}
               >
