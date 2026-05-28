@@ -10,7 +10,6 @@ import { CreateCommentPage } from "./pages/CreateComment/CreateCommentPage";
 
 function App() {
   return (
-    // <BrowserRouter basename="/Travel__blog">
         <HashRouter>
       <Routes>
         {/* Layout — родительский роут, он всегда на экране */}
@@ -25,7 +24,6 @@ function App() {
         </Route>
       </Routes>
       </HashRouter>
-    // </BrowserRouter>
   );
 }
 
