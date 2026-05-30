@@ -2,12 +2,15 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { fileURLToPath } from "url";
 import path from "path";
+import process from "process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Переводим конфиг на функцию, чтобы получить доступ к режиму (command)
 export default defineConfig(({ command }) => {
+  const isGithub = process.env.BUILD_TARGET === "github";
+
   return {
     css: {
       preprocessorOptions: {
@@ -21,19 +24,19 @@ export default defineConfig(({ command }) => {
     },
     plugins: [react()],
     build: {
-      cssMinify: "esbuild", 
+      cssMinify: "esbuild",
       rollupOptions: {
         output: {
           manualChunks(id) {
             if (id.includes("node_modules")) {
-              return "vendor"; 
+              return "vendor";
             }
           },
         },
       },
     },
-  
-    base: command === "serve" ? "/" : "/Travel__blog/",
+
+    base: command === "serve" ? "/" : isGithub ? "/Travel__blog/" : "/",
     server: {
       proxy: {
         "/api": {
